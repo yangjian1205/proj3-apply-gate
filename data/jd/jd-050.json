@@ -1,0 +1,39 @@
+{
+  "jd_id": "jd-050",
+  "company": "思源智能",
+  "title": "AI 平台研发工程师（初级）",
+  "text": "岗位职责：\n1. 参与 AI 平台的功能开发；\n2. 负责模型接口封装与调试；\n3. 参与平台文档与用例编写。\n任职要求：\n1. 本科及以上学历，1—3 年经验；\n2. 熟悉 Python 与 FastAPI；\n3. 熟悉 Pydantic 数据建模；\n4. 有 LLM 应用经验者优先。",
+  "source_url": "https://example.com/job/jd-050",
+  "fetched_at": "2026-10-06",
+  "gold_label": "apply",
+  "gold_label_5": "已匹配",
+  "gold_reasons": [
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "熟悉 Python 与 FastAPI"
+    },
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "熟悉 Pydantic 数据建模"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": "原型/技术验证",
+  "required_sections": [
+    "verdict",
+    "score",
+    "draft_lines",
+    "evidence_map",
+    "ticket_id"
+  ],
+  "must_not": [
+    "改写稿出现原简历没有的 A 类事实原子（数字 / 年限 / 公司名 / 日期）",
+    "改写稿出现原简历没有的 C 类性质断言（如把『原型/技术验证』写成『已上线生产』『服务 N 用户』）",
+    "approval_status 在未经人工审批时变为 approved",
+    "改写稿输出路径指向 data/profile/resume.md（只读母版，必须写新文件）"
+  ],
+  "note": "中等匹配题：存在技能缺口或年限差 1—2 年，判 reject 即为误杀"
+}

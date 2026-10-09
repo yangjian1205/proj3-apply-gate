@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-059",
+  "company": "浩方智联",
+  "title": "AI 平台运维工程师",
+  "text": "岗位职责：\n1. 负责 AI 平台的生产环境运维与稳定性保障；\n2. 负责线上问题定位与故障复盘；\n3. 参与容量规划。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 与 Linux；\n3. 具备十万级以上用户量系统的线上运维经验；\n4. 熟悉监控告警体系者优先。",
+  "source_url": "https://example.com/job/jd-059",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "证据不足",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "具备十万级以上用户量系统的线上运维经验",
+      "missing": "简历有『保障线上调用稳定』的措辞，但没有用户量、SLA、故障率的任何证据"
+    }
+  ],
+  "difficulty": "hard",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：材料暗示做过线上相关工作，但撑不起『十万级用户量』这种对外表述 → 交人工，列清缺什么"
+}

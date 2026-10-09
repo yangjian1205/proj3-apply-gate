@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-055",
+  "company": "微时科技",
+  "title": "AI 工程师",
+  "text": "我们正在找一位 AI 方向的工程师加入团队。\n要求：熟悉 Python，对大模型应用有兴趣，能快速上手新东西。\n待遇面议，其他条件可谈。",
+  "source_url": "https://example.com/job/jd-055",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "待确认",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "待遇面议，其他条件可谈",
+      "missing": "JD 未写学历 / 年限 / 城市 / 是否远程"
+    }
+  ],
+  "difficulty": "easy",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：JD 信息量严重不足，任何三分类结论都是猜的"
+}

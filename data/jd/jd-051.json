@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-051",
+  "company": "未名智能",
+  "title": "AI 应用工程师",
+  "text": "岗位职责：\n1. 负责 AI 应用的功能开发与迭代；\n2. 与产品、算法团队协作推进项目；\n3. 参与技术方案评审。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python，有 LLM 应用开发经验；\n3. 需与团队进行较多线下协作，能适应团队工作节奏；\n4. 有 Agent 项目经验者优先。",
+  "source_url": "https://example.com/job/jd-051",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "待确认",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "需与团队进行较多线下协作，能适应团队工作节奏",
+      "missing": "JD 全文未写工作城市"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：JD 提到线下协作但没写城市 —— 『不冲突』和『冲突』都无法证明，必须交人工"
+}

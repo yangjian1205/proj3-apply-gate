@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-053",
+  "company": "合众智联",
+  "title": "大模型应用工程师",
+  "text": "岗位职责：\n1. 负责大模型应用的方案设计与开发；\n2. 参与检索链路与提示词体系搭建；\n3. 参与效果评测。\n任职要求：\n1. 学历要求面议；\n2. 熟悉 Python 与主流大模型 API；\n3. 工作地点：多地可选，具体以面试沟通为准；\n4. 薪资与职级面议，视能力与经验确定。",
+  "source_url": "https://example.com/job/jd-053",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "待确认",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "工作地点：多地可选，具体以面试沟通为准",
+      "missing": "JD 未写死工作城市"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：连学历和城市都写成『面议 / 可选』 → 判定所需的核心输入全缺"
+}

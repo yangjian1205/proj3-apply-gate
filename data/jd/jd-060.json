@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-060",
+  "company": "同舟智研",
+  "title": "AI 应用技术负责人",
+  "text": "岗位职责：\n1. 负责 AI 应用线的技术方案与交付节奏把控；\n2. 带领 3—5 人小组完成项目交付；\n3. 负责对外技术沟通。\n任职要求：\n1. 本科及以上学历；\n2. 有带领小团队完成完整交付的经验；\n3. 熟悉 Python 与 LLM 应用链路；\n4. 沟通协调能力优秀。",
+  "source_url": "https://example.com/job/jd-060",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "证据不足",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "有带领小团队完成完整交付的经验",
+      "missing": "简历里三个项目均为个人独立开发，没有协作或带队记录"
+    }
+  ],
+  "difficulty": "hard",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：没有对应证据，但也不构成客观事实冲突（不是硬门槛）→ 交人工裁定"
+}

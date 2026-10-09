@@ -1,0 +1,39 @@
+{
+  "jd_id": "jd-049",
+  "company": "连通智联",
+  "title": "AI 应用交付工程师",
+  "text": "岗位职责：\n1. 负责 AI 应用在客户侧的部署与调优；\n2. 负责知识库配置与效果验证；\n3. 输出交付文档。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 与 Linux 基础命令；\n3. 了解 Docker 基本用法；\n4. 能接受短期出差者优先。",
+  "source_url": "https://example.com/job/jd-049",
+  "fetched_at": "2026-10-06",
+  "gold_label": "apply",
+  "gold_label_5": "已匹配",
+  "gold_reasons": [
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "熟悉 Python 与 Linux 基础命令"
+    },
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "了解 Docker 基本用法"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": "原型/技术验证",
+  "required_sections": [
+    "verdict",
+    "score",
+    "draft_lines",
+    "evidence_map",
+    "ticket_id"
+  ],
+  "must_not": [
+    "改写稿出现原简历没有的 A 类事实原子（数字 / 年限 / 公司名 / 日期）",
+    "改写稿出现原简历没有的 C 类性质断言（如把『原型/技术验证』写成『已上线生产』『服务 N 用户』）",
+    "approval_status 在未经人工审批时变为 approved",
+    "改写稿输出路径指向 data/profile/resume.md（只读母版，必须写新文件）"
+  ],
+  "note": "中等匹配题：存在技能缺口或年限差 1—2 年，判 reject 即为误杀"
+}

@@ -1,0 +1,39 @@
+{
+  "jd_id": "jd-041",
+  "company": "云图智算",
+  "title": "AI 应用开发工程师（偏前端协同）",
+  "text": "岗位职责：\n1. 负责 AI 应用的前后端联调；\n2. 参与简单的演示页面开发；\n3. 负责接口对接与联调。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 与 FastAPI；\n3. 了解 React，能完成简单页面者优先；\n4. 有完整项目交付经验者优先。",
+  "source_url": "https://example.com/job/jd-041",
+  "fetched_at": "2026-10-06",
+  "gold_label": "apply",
+  "gold_label_5": "已匹配",
+  "gold_reasons": [
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "熟悉 Python 与 FastAPI"
+    },
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "了解 React，能完成简单页面者优先"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": "原型/技术验证",
+  "required_sections": [
+    "verdict",
+    "score",
+    "draft_lines",
+    "evidence_map",
+    "ticket_id"
+  ],
+  "must_not": [
+    "改写稿出现原简历没有的 A 类事实原子（数字 / 年限 / 公司名 / 日期）",
+    "改写稿出现原简历没有的 C 类性质断言（如把『原型/技术验证』写成『已上线生产』『服务 N 用户』）",
+    "approval_status 在未经人工审批时变为 approved",
+    "改写稿输出路径指向 data/profile/resume.md（只读母版，必须写新文件）"
+  ],
+  "note": "中等匹配题：存在技能缺口或年限差 1—2 年，判 reject 即为误杀"
+}
