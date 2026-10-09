@@ -1,0 +1,25 @@
+# proj3-apply-gate 依赖
+# 装法：pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# 注：版本按本机实测通过的版本锁定（2026-10-06）
+
+# 图与编排
+langgraph==1.2.12
+langgraph-checkpoint==4.2.0
+langgraph-checkpoint-sqlite==3.1.1
+langgraph-prebuilt==1.1.0
+langchain-core==1.6.4
+langchain-openai==1.6.4
+
+# 模型
+openai==2.53.0
+
+# 校验与配置
+pydantic==2.13.4
+python-dotenv==1.2.2
+
+# 服务化
+fastapi==0.141.1
+uvicorn==0.52.1
+
+# MCP Server（自研工具，暴露 check_hard_rules）
+mcp==1.20.0

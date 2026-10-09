@@ -1,0 +1,40 @@
+# proj3-apply-gate 容器编排（静态交付物，同 Dockerfile 的说明：本机无法真实运行）
+#
+# 启动：docker compose up --build
+# 说明：密钥走 .env 注入，不硬编码进镜像。
+
+services:
+  gate:
+    build: .
+    image: proj3-apply-gate:local
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    command: ["python", "scripts/gate.py", "--json"]
+
+  api:
+    build: .
+    image: proj3-apply-gate:local
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    ports:
+      - "8103:8103"
+    # ⚠️ 单 worker：SqliteSaver 与 audit.db 的锁都不跨进程
+    command: ["python", "-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8103"]
+    depends_on:
+      - gate
+
+  mcp:
+    build: .
+    image: proj3-apply-gate:local
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    # MCP Server 走 stdio，容器里一般由客户端 exec 进来，这里只做存在性声明
+    command: ["python", "mcp_server.py"]
