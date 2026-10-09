@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "candidate_id": "your-github-id",
+  "name": "张某某",
+  "updated_at": "2026-10-06",
+  "_confirmed": false,
+  "_todo": [
+    "这是模板：复制为 candidate_profile.json 后填入你自己的真实信息，再把 _confirmed 改成 true。expected_cities 现在是示例值「广州」，必须改成你真实的期望工作城市 —— 它直接决定「base 某地 + 坐班」这类硬门槛判不判。"
+  ],
+  "expected_cities": [
+    "广州"
+  ],
+  "accept_remote": true,
+  "accept_relocate": false,
+  "need_sponsorship": false,
+  "work_auth_local": true,
+  "highest_degree": "本科",
+  "degree_level": 2,
+  "is_fresh_graduate": false,
+  "graduation_year": 2025,
+  "years_experience": 1.0,
+  "years_experience_note": "2025.07—2025.12（甲公司）+ 2026.01—2026.07（乙公司）≈ 13 个月，保守取 1.0 年",
+  "certificates": [
+    "华为 HCIP-AI-EI（H13-321）备考中"
+  ],
+  "language_certs": [],
+  "target_roles": [
+    "AI Agent 开发工程师",
+    "LLM 应用开发工程师",
+    "AI 应用工程师"
+  ],
+  "current_status": "离职求职中",
+  "available_from": "随时",
+  "expected_salary": "面议",
+  "degree_level_map": {
+    "1": "大专及以下",
+    "2": "本科",
+    "3": "硕士",
+    "4": "博士"
+  }
+}

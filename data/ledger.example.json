@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "profile": {
+    "candidate_id": "your-github-id",
+    "target_roles": [
+      "AI 应用工程师",
+      "AI Agent / LLM 应用开发工程师"
+    ],
+    "updated_at": "2026-10-06"
+  },
+  "delivery_stages": {
+    "生产落地": "有线上地址 / 有真实用户 / 有运维记录",
+    "内部试点": "有限范围内跑起来了（如 8 人试用）",
+    "原型/技术验证": "跑通了、有测试与评测数据，没有真实使用者",
+    "计划/估算": "还只是方案，尚未完成"
+  },
+  "draft_stage_ceiling": {
+    "value": "原型/技术验证",
+    "reason": "改写稿的主体是三个个人项目（claim-project-001/002/003），三者均为原型/技术验证档。因此改写稿允许提到的最强性质就是「完成流程 / 跑通链路 / 完成评测」。出现「已上线 / 生产环境 / 服务 N 用户」这类生产落地档表述一律拦下。若某天某个项目真的上线了，请先改这里（并把依据写进对应 claim 的 sources），再让它出稿 —— 不允许绕过去。",
+    "source_claim_ids": [
+      "claim-project-001",
+      "claim-project-002",
+      "claim-project-003"
+    ],
+    "note": "这是 provenance 判定 C 类「性质升格」的档位上限，纯枚举比大小，不经过模型。"
+  },
+  "claims": [
+    {
+      "id": "claim-edu-001",
+      "source_fact": "2021.09—2025.06 就读某某大学某某专业专业，本科；AI/编程方向课程为自学。",
+      "candidate_wording": "某某大学 · 某某专业 · 本科（2021.09—2025.06）；自学课程：Python 编程与数据结构、机器学习基础、深度学习与 PyTorch、LLM 应用开发与 Agent 架构、向量检索与 RAG。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "C:/Users/Administrator/Desktop/agent/张某某ai_改版_v8.pdf",
+          "public": false,
+          "note": "教育背景栏"
+        }
+      ],
+      "responsibility_level": "参与",
+      "verification_status": "已确认",
+      "delivery_stage": "生产落地",
+      "delivery_stage_note": "学历与毕业时间是已发生的客观事实，可直接对外表述",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "非科班背景，用自学课程 + 项目证据补足技术栈"
+        ],
+        "difficulties": [
+          "某某专业专业与 AI 应用岗无直接对应，需要项目证据承担说服力"
+        ],
+        "verification": [
+          "毕业时间与学信网一致"
+        ],
+        "result": "本科毕业，转 AI 应用方向"
+      },
+      "boundary": "学历、专业、时间均按真实填写，自学课程不写成学校开设课程。",
+      "risk_notes": [
+        "简历中『自学课程』不得被表述为『主修课程』"
+      ],
+      "last_verified": "2026-10-06"
+    },
+    {
+      "id": "claim-exp-wanhan-001",
+      "source_fact": "2025.07—2025.12 在甲公司任初级开发工程师，做企业知识库数据建设、FastAPI 问答接口、双路召回与拒答机制。",
+      "candidate_wording": "甲公司 · 初级开发工程师（2025.07—2025.12）：负责企业知识库数据链路——制度 / FAQ / 产品手册文档清洗后按主题切块并保留『所属文档 / 章节 / 原文链接』元数据，配增量同步；后端问答接口基于 FastAPI，支持多轮追问与查询改写，前端及企业微信、飞书可直接接入；检索上用 numpy 手写余弦相似度验证原理，再加入 BM25 关键词一路并以 RRF 融合；回答强制附带引用来源，库外问题走拒答分支。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "C:/Users/Administrator/Desktop/agent/张某某ai_改版_v8.pdf",
+          "public": false,
+          "note": "工作经历栏第 1 段"
+        }
+      ],
+      "responsibility_level": "负责模块",
+      "verification_status": "待确认",
+      "delivery_stage": "生产落地",
+      "delivery_stage_note": "简历措辞指向真实业务系统；但因 verification_status 仍为『待确认』，对外表述前必须先与本人核实",
+      "allowed_uses": [
+        "AI 应用工程师简历（草稿）"
+      ],
+      "interview_details": {
+        "decisions": [
+          "先手写余弦相似度验证检索原理，再决定是否引入向量库",
+          "用 RRF 融合两路而非加权求和，避免量纲不一致"
+        ],
+        "difficulties": [
+          "口语化提问与书面文档措辞不匹配导致纯向量漏召回"
+        ],
+        "verification": [
+          "自建 50 题评测集对比三路检索指标"
+        ],
+        "result": "待用户确认该段是否为真实在职内容"
+      },
+      "boundary": "该条与 claim-project-001 描述的是同一套知识库，不得在面试中当成两个独立成果。",
+      "risk_notes": [
+        "工作经历与项目一指向同一套知识库，口径必须统一：在工作经历里定性描述，量化指标只放项目一",
+        "214 块 / 35 份文档是自建语料规模，不属于公司生产数据，不得写进工作经历条目"
+      ],
+      "last_verified": null
+    },
+    {
+      "id": "claim-exp-shenxing-001",
+      "source_fact": "2026.01—2026.07 在乙公司人工智能科技有限公司任 LLM 算法工程师，负责 LLM 在线推理接口、Prompt 与上下文管理、LangGraph 工作流与敏感操作人审、评测回归。",
+      "candidate_wording": "乙公司人工智能科技有限公司 · LLM 算法工程师（2026.01—2026.07）：搭建 LLM 在线推理接口，用 FastAPI 封装对话服务，支持流式输出与并发，超时与失败做重试兜底；设计 Prompt 模板并管理多轮上下文；用 LangGraph 状态机建模业务流程，Function Calling 接入订单 / 库存工具，退款、改地址等敏感操作挂起转人工审批；围绕真实业务问题搭建评测集并写成评估脚本，每次改动跑回归。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "C:/Users/Administrator/Desktop/agent/张某某ai_改版_v8.pdf",
+          "public": false,
+          "note": "工作经历栏第 2 段"
+        }
+      ],
+      "responsibility_level": "负责模块",
+      "verification_status": "待确认",
+      "delivery_stage": "内部试点",
+      "delivery_stage_note": "简历出现『保障线上调用稳定』字样，但没有任何线上地址 / 用户量证据；对外最多说到『内部试点』，不得说成生产环境",
+      "allowed_uses": [
+        "AI 应用工程师简历（草稿）"
+      ],
+      "interview_details": {
+        "decisions": [
+          "敏感操作先挂起转人工，而不是让模型直接执行"
+        ],
+        "difficulties": [
+          "多轮上下文与输出格式控制"
+        ],
+        "verification": [
+          "评估脚本跑回归"
+        ],
+        "result": "待用户确认在职时间与每条职责表述"
+      },
+      "boundary": "该段职责为草稿表述，需本人逐条核对为真实做过的事。",
+      "risk_notes": [
+        "在职时间 2026.01—2026.07 待确认",
+        "第 5 条『依据错误日志与响应耗时分布定位故障调用链』目前没有任何可展示证据，建议删除或改成可展开的具体排查案例",
+        "『保障线上调用稳定』属于 C 类性质断言，当前 delivery_stage 只到『内部试点』→ 改写稿不得出现『生产 / 上线 / 服务 N 用户』"
+      ],
+      "last_verified": null
+    },
+    {
+      "id": "claim-project-001",
+      "source_fact": "从零开发企业知识库智能问答系统：35 份模拟企业文档、214 个知识块，向量 + BM25 双路召回 + RRF 融合，三档拒答 + 引用溯源，并用 50 题评测集做量化对照。代码已开源。",
+      "candidate_wording": "企业知识库智能问答系统（RAG 混合检索 · 引用溯源 · 库外拒答）：把 35 份制度 / FAQ / 产品手册文档清洗后切分为 214 个知识块并保留元数据；检索侧先用 numpy 手写余弦相似度验证原理，再实现向量 + BM25 双路召回与 RRF 分数融合；回答侧强制标注引用来源（文档名 + 原文链接），库外问题走三档拒答路由。",
+      "sources": [
+        {
+          "type": "repository",
+          "location": "https://github.com/your-github-id/proj1-kb-agent",
+          "public": true,
+          "note": "GitHub 公开仓库，Updated Sep 22, 2026"
+        },
+        {
+          "type": "document",
+          "location": "E:/agent-learning/proj1-kb-agent/notes/d23_eval_report.md",
+          "public": false,
+          "note": "检索评测报告"
+        },
+        {
+          "type": "document",
+          "location": "E:/agent-learning/proj1-kb-agent/eval/questions.json",
+          "public": false,
+          "note": "50 题评测集"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "跑通链路 + 有评测数据，但语料是自建模拟文档、没有真实使用者 → 不许写『上线』『服务 N 用户』",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "先手写余弦相似度验证原理，再引入向量库，确认理解底层而非只会调库",
+          "用 RRF 融合而非加权求和；对照实验后发现本语料下纯向量已很强、融合在部分题型反而掉点，据此判断融合不是无脑更优"
+        ],
+        "difficulties": [
+          "口语化提问 vs 书面文档措辞不匹配，纯向量漏召回",
+          "Chroma 的 add() 遇重复 id 静默跳过，改用 upsert() 才不丢块"
+        ],
+        "verification": [
+          "50 题评测集（45 可答 + 5 库外）跑块级 hit@5 与 MRR 对照",
+          "三档拒答端到端复测：库外 5/5、误拒 0/45"
+        ],
+        "result": "块级 hit@5 / MRR：向量 100% / 0.985、BM25 93.3% / 0.839、RRF 97.8% / 0.924；端到端库外拒答 5/5、误拒 0/45"
+      },
+      "boundary": "语料是自建的模拟企业文档（35 份 / 214 块），不是某家公司的生产知识库；指标全部来自自建 50 题评测集，口径为块级 top5。",
+      "risk_notes": [
+        "对外必须写明指标口径『50 题自建评测集 · 块级 top5』，否则容易被追问成线上数据",
+        "2026-10-04 磁盘核实：proj1 全仓没有 import langgraph/langchain，requirements.txt 也没有；简历技术栈里的『LangGraph』无代码支撑，建议删除"
+      ],
+      "last_verified": "2026-10-04"
+    },
+    {
+      "id": "claim-project-002",
+      "source_fact": "用 LangGraph 做智能客服 Agent：状态机 + SQLite checkpointer 会话记忆，查订单 / 库存 / 物流工具，退款与改地址通过 interrupt 挂起转人工审批；FastAPI 暴露 /chat、/approvals 接口。代码已开源。",
+      "candidate_wording": "智能客服 Agent（含人工审批）：低危请求（查订单 / 查物流）全自动，高危请求（退款 / 改地址）自动挂起转人工审批，批准后才执行；退款与改地址两个写操作刻意不注册为可被模型自动调用的工具；显式设置 recursion_limit 作为轮次保险丝；审批接口做待办存在、会话真挂起、单号一致三道校验。",
+      "sources": [
+        {
+          "type": "repository",
+          "location": "https://github.com/your-github-id/proj2-support-agent",
+          "public": true,
+          "note": "GitHub 公开仓库，Updated Oct 1, 2026"
+        },
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj2-support-agent/agent/tools.py",
+          "public": false,
+          "note": "do_refund / do_change_address 未加 @tool 装饰器"
+        },
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj2-support-agent/server.py",
+          "public": false,
+          "note": "实际路由：POST /chat、POST /approvals/{ticket_id}、GET /approvals、GET /sessions/{thread_id}、GET /health"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "个人独立开发，实际交付形态是 FastAPI 接口 + CLI 演示，没有前端页面、无真实用户",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "高危写操作不暴露成可被模型自动调用的工具，只能走人工审批路径——用工具注册与否做安全边界，而不是靠 Prompt 约束",
+          "显式设置 recursion_limit 防工具循环"
+        ],
+        "difficulties": [
+          "interrupt 恢复时节点会从头重跑，副作用必须放在 interrupt 之后或下游保证幂等",
+          "挂起状态传普通输入会导致审批单静默丢失，接口层需先查会话是否真挂着"
+        ],
+        "verification": [
+          "审批接口三道校验：待办表 404、会话真挂起 409、单号一致 409"
+        ],
+        "result": "跑通低危全自动与高危必经人审两条完整链路，审计库可按单号回放"
+      },
+      "boundary": "项目为个人独立开发；实际交付形态是 FastAPI 接口 + CLI 演示，没有前端页面。",
+      "risk_notes": [
+        "v8 简历写的『React 演示页』与『/approve 接口』与磁盘现状不符（无前端目录，实际路由是 /approvals），对外表述必须改成接口口径",
+        "不要写成『线上/生产环境』，本项目无真实用户量"
+      ],
+      "last_verified": "2026-10-04"
+    },
+    {
+      "id": "claim-project-003",
+      "source_fact": "proj3-apply-gate：投递决策闸门 Agent。JD + 真实简历 → 三分类（该投 / 不该投 / 边界），硬门槛走纯代码零漏放，改写稿逐事实原子回原简历溯源，出稿前 interrupt 等人审批。",
+      "candidate_wording": "投递决策闸门 Agent（proj3-apply-gate）：把「投哪些岗位」变成可机器判定的判断 —— 硬门槛走纯代码词表（不调模型）守住漏放率 0%；匹配判定输出对内五态、对外三分类；简历改写稿的每个事实原子（数字 / 年限 / 公司名 / 性质断言）必须回原简历找到出处，找不到就回退重写，3 轮不过直接拦；出稿前 interrupt 挂起等人工点头。全链路审计落 SQLite，成本逐次记账，硬规则引擎另包成 MCP Server 供外部调用。",
+      "sources": [
+        {
+          "type": "repository",
+          "location": "E:/agent-learning/proj3-apply-gate",
+          "public": false,
+          "note": "2026-10-06 建成，待上传 GitHub"
+        },
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj3-apply-gate/data/rules.json",
+          "public": false,
+          "note": "硬门槛规则唯一真源，13 条规则 / 三档"
+        },
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj3-apply-gate/data/jd/",
+          "public": false,
+          "note": "60 题人工标注评测集"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "待确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "代码与评测数据齐全，但没有真实用户使用；对外不得说成已上线",
+      "allowed_uses": [
+        "AI 应用工程师简历（草稿）"
+      ],
+      "interview_details": {
+        "decisions": [
+          "确定性的交给代码、模糊的才交给模型 —— 硬规则闸根本不调大模型，所以敢承诺漏放率 0%",
+          "引入 C 类「状态 / 性质断言」原子：查的不只是关键词在不在原文里，还有性质有没有被抬档",
+          "两层测试分离：确定性校验带 exit code 当门禁，受模型影响的指标只出数字不设门禁",
+          "候选动作只有唯一合法路径时不调模型 —— 调度权只留在真正有多个合理选项的地方（如改写策略选择）"
+        ],
+        "difficulties": [
+          "反编造要拆到可机械执行：抽原子 → 分类 → 规范化 → 匹配 → 回退",
+          "五态分类要拆开「信息不足」与「简历没写清」，否则转行者会被系统性误杀",
+          "排除词子串匹配会把自己排掉（『不提供工作签证支持』里含『提供工作签证支持』）→ 改为匹配句内生效 + 否定前缀判定",
+          "规范化里同义词必须先于中文数字转换，否则『英语六级』会变成『英语6级』让等级规则整批失效"
+        ],
+        "verification": [
+          "20 道硬门槛题 100% 命中（漏放 = 0）作为词表完备性判据，带 exit code 可每天重跑",
+          "故意塞假数字 / 塞性质升格 → 溯源必须抓到并回退（单元用例 pv-002 / pv-004 固定验证）",
+          "57 题评测集跑四指标 + 两组分层抽样对照实验"
+        ],
+        "result": "57 题实测：硬门槛漏放率 0.00%（20 道全命中）、事实可溯源率 100.00%（1278 个原子）、未审批不放行率 0.00%、三分类准确率 96.5%、边界召回 71.4%（5/7，未达 80% 目标，两道判错题的 gold 本身有口径争议，未修改）、误杀率 0.0%；单题成本 ¥0.0131、单题耗时 7.76 秒、平均重写轮数 1.15；对照实验：带溯源回退编造率 0.00% vs 不校验 0.41%，多节点准确率 93.3% vs 大 prompt 一把梭 66.7%"
+      },
+      "boundary": "简历上原先写的项目三是『多智能体协作系统（Supervisor 模式）+ MCP + Docker』，与实际建成的 proj3-apply-gate 内容不一致，成稿前必须二选一地对齐。",
+      "risk_notes": [
+        "⚠️ 简历项目三描述与 proj3-apply-gate 实际内容不符：简历写 Supervisor 多智能体 + Docker，实际做的是投递决策闸门（含 MCP Server 但非 Supervisor 架构）。成稿前必须改写简历项目三，否则面试一问就穿",
+        "本项目为个人独立开发，无真实用户；不得写成『已上线』『服务 N 用户』"
+      ],
+      "last_verified": "2026-10-06"
+    },
+    {
+      "id": "claim-skill-001",
+      "source_fact": "手写实现过 ReAct 文本协议版与官方 Function Calling 版 Agent；LangGraph 的 StateGraph / checkpointer / interrupt；FastAPI + Pydantic；asyncio 并发（Semaphore 限流 / TaskGroup 编排 / return_exceptions 隔离错误）。",
+      "candidate_wording": "Agent 架构与工程化：手写实现过 ReAct 文本协议版与官方 Function Calling 版 Agent，具备轮次保险丝、错误自愈、超时重试、JSONL 日志等可靠性设计经验；熟练使用 LangGraph 的 StateGraph、checkpointer 会话记忆以及 interrupt 实现人审流程；后端侧使用 FastAPI 完成路由、依赖注入与 Pydantic 数据校验，asyncio 异步批量并发用 Semaphore 限流、TaskGroup 编排并通过 return_exceptions 隔离错误。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "C:/Users/Administrator/Desktop/agent/张某某ai_改版_v8.pdf",
+          "public": false,
+          "note": "个人优势第 2 段"
+        },
+        {
+          "type": "directory",
+          "location": "E:/agent-learning/day6-react-agent",
+          "public": false,
+          "note": "手写 ReAct 文本协议版与 Function Calling 版"
+        },
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj2-support-agent/agent/graph.py",
+          "public": true,
+          "note": "StateGraph + checkpointer + interrupt 的实际用法"
+        }
+      ],
+      "responsibility_level": "负责模块",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "技能自述类主张，对应的是学习与实践阶段的产物，不是生产交付",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "先手写文本协议版 ReAct 理解循环本质，再用官方 Function Calling 版做工程实现"
+        ],
+        "difficulties": [
+          "模型不按格式输出导致循环解析失败，需要做格式兜底与轮次保险丝"
+        ],
+        "verification": [
+          "两个版本都能跑同一条工具调用链路，可对照讲差异"
+        ],
+        "result": "两版 Agent 均跑通，代码在 day6/day7 目录"
+      },
+      "boundary": "这些是学习与个人项目中的实践，不是公司生产环境的工程经验，面试时不得暗示为工作产出。",
+      "risk_notes": [
+        "『熟练』『具备经验』属于 C 类性质断言，档位为『原型/技术验证』→ 改写稿不得升格成『在生产环境长期使用』"
+      ],
+      "last_verified": "2026-10-06"
+    },
+    {
+      "id": "claim-eval-001",
+      "source_fact": "proj1 的检索评测：50 题（45 可答 + 5 库外），块级判定，top5 截断。向量 hit@5 100% / MRR 0.985；BM25 93.3% / 0.839；RRF 97.8% / 0.924。",
+      "candidate_wording": "构建 50 题真实场景评测集（45 可答 + 5 库外），对三路检索做块级 hit@5 与 MRR 对照：向量 100% / 0.985、BM25 93.3% / 0.839、RRF 97.8% / 0.924；据此定位 BM25 的同义词盲区（synonym 题型 83%）与融合的掉点题型。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "E:/agent-learning/proj1-kb-agent/notes/d23_eval_report.md",
+          "public": true,
+          "note": "已随仓库开源"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "指标来自自建 50 题评测集，不是线上流量数据",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "判定粒度选块级而不是文档级——文档级三路都是 100%，区分度不够"
+        ],
+        "difficulties": [
+          "指标高不代表方案对：向量单路 100% 而 RRF 97.8%，需要能解释为什么还保留融合"
+        ],
+        "verification": [
+          "分题型（direct / synonym / entity / numeric / multi）拆开看，暴露 BM25 同义词盲区"
+        ],
+        "result": "RRF 97.8% / 0.924，BM25 93.3% / 0.839"
+      },
+      "boundary": "指标来自自建 50 题评测集，不是线上流量数据；样本量小，不外推到生产效果。",
+      "risk_notes": [
+        "被问『融合还不如纯向量，为什么用融合』要有答案：说明这是评测得出的结论，不是默认更优"
+      ],
+      "last_verified": "2026-10-04"
+    },
+    {
+      "id": "claim-guard-001",
+      "source_fact": "proj1 的三档拒答：硬拒 <0.55、灰区 0.55~0.63 交 LLM 判断、放行 ≥0.63。端到端库外召回 5/5、误拒 0/45、灰区 4/50（LLM 判定 4/4 正确）。",
+      "candidate_wording": "回答侧实现三档拒答路由：相似度低于 0.55 直接拒答，0.55~0.63 的灰区交模型判断，0.63 以上放行；端到端库外问题召回 5/5、可答题误拒 0/45。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "E:/agent-learning/proj1-kb-agent/notes/d24_guard_report.md",
+          "public": true,
+          "note": "已随仓库开源"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "阈值只在自建语料上验证过",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "先做单阈值扫描（0.50~0.70），发现 0.63 能拦全部库外题但误杀 1 道可答题，于是引入灰区把需要判断的交模型，而不是继续抬高阈值"
+        ],
+        "difficulties": [
+          "阈值太高误杀可答题，太低放过库外题"
+        ],
+        "verification": [
+          "阈值扫描表 + 灰区逐题核对手工标注真值"
+        ],
+        "result": "库外 5/5、误拒 0/45、灰区 4/50、灰区内 LLM 判定 4/4"
+      },
+      "boundary": "样本量为 50 题，阈值只在本语料上验证过，语料规模变化后需重新扫描。",
+      "risk_notes": [
+        "被问『语料扩到 1000 份文档阈值还成立吗』要有答案：需要按新分布重扫，阈值不是常量"
+      ],
+      "last_verified": "2026-10-04"
+    },
+    {
+      "id": "claim-guard-002",
+      "source_fact": "proj3 的三层门禁设计：L1 确定性门禁（gate.py --json + exit code，必须 100%）、L2 结构校验（账本 + 评测集 schema）、L3 模型行为指标（只出数字不设门禁）。判据：受模型影响的不能当门禁。",
+      "candidate_wording": "三层门禁：确定性校验（硬门槛词表 + 跨字段矛盾检查）带 exit code 进 CI 当门禁，结构校验（账本 / 评测集 schema）同样必须 100% 通过，受模型影响的分类准确率只出指标不设门禁；理由是 LLM 输出受模型版本、温度、系统提示多重影响，单次不稳定，混着跑会分不清是规则改动还是随机性的锅。",
+      "sources": [
+        {
+          "type": "file",
+          "location": "E:/agent-learning/proj3-apply-gate/scripts/gate.py",
+          "public": false,
+          "note": "L1 门禁实现"
+        },
+        {
+          "type": "document",
+          "location": "E:/workbuddy2/Asu-skills/tests/skill-routing-cases.yaml",
+          "public": false,
+          "note": "分层判据的出处：该文件头注释明确写 LLM 路由不适合作为确定性 CI 门禁"
+        }
+      ],
+      "responsibility_level": "主导方案或交付",
+      "verification_status": "已确认",
+      "delivery_stage": "原型/技术验证",
+      "delivery_stage_note": "工程机制设计，有代码与命令可验证",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "面试自我介绍"
+      ],
+      "interview_details": {
+        "decisions": [
+          "受模型影响的东西不适合当门禁，只能当指标 —— 因此把测试拆成确定性门禁与模型指标两层"
+        ],
+        "difficulties": [
+          "改一条正则要重跑门禁，改提示词才该跑指标，两者重跑时机相反，混跑会误判归因"
+        ],
+        "verification": [
+          "gate.py --json 输出 + exit code，可每天重跑"
+        ],
+        "result": "L1 / L2 门禁带 exit code，L3 只出数字"
+      },
+      "boundary": "该分层的判据来自一个开源中文求职技能库的路由回归用例文件头注释，不是本人原创观点；面试时可说『一个开源技能库』。",
+      "risk_notes": [
+        "别把这套分层说成自己独创 —— 出处要诚实"
+      ],
+      "last_verified": "2026-10-06"
+    },
+    {
+      "id": "claim-cert-001",
+      "source_fact": "备考华为 HCIP-AI-EI（H13-321）认证，尚未取得。",
+      "candidate_wording": "华为 HCIP-AI-EI（H13-321）：备考中（系统学习 AI 与深度学习的原理、应用与工程落地）。",
+      "sources": [
+        {
+          "type": "document",
+          "location": "C:/Users/Administrator/Desktop/agent/张某某ai_改版_v8.pdf",
+          "public": false,
+          "note": "证书与认证栏"
+        }
+      ],
+      "responsibility_level": "参与",
+      "verification_status": "已确认",
+      "delivery_stage": "计划/估算",
+      "delivery_stage_note": "尚未取得 → 任何情况下不得写成已获得",
+      "allowed_uses": [
+        "AI 应用工程师简历",
+        "HR 开场白"
+      ],
+      "interview_details": {
+        "decisions": [],
+        "difficulties": [],
+        "verification": [
+          "出证后更新为已取得并补充证书编号"
+        ],
+        "result": "备考中"
+      },
+      "boundary": "必须保留『备考中』字样，不得写成已获得。",
+      "risk_notes": [
+        "若被问『考过了吗』要直接回答备考中，并说清在学什么"
+      ],
+      "last_verified": "2026-10-06"
+    }
+  ]
+}

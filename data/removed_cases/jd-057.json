@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-057",
+  "company": "星辰智研",
+  "title": "LLM 应用工程师（提示词方向）",
+  "text": "岗位职责：\n1. 负责提示词模板的设计与迭代；\n2. 负责多轮上下文管理与输出格式控制；\n3. 参与回答质量评估。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 与主流大模型 API；\n3. 有提示词工程经验，能独立设计 Prompt 模板；\n4. 有拒答策略设计经验者优先。",
+  "source_url": "https://example.com/job/jd-057",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "表达缺口",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "有提示词工程经验，能独立设计 Prompt 模板",
+      "missing": "简历技能栈速览里没有『Prompt / 提示词』这个词"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：上海燊醒第 2 条写了『设计 Prompt 模板』，但没作为技能点列出 → 表达缺口"
+}

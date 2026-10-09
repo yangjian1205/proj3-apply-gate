@@ -1,0 +1,33 @@
+{
+  "jd_id": "jd-056",
+  "company": "衡知科技",
+  "title": "检索效果评测工程师",
+  "text": "岗位职责：\n1. 负责检索链路的量化评测方案设计；\n2. 维护评测集并持续做回归对比；\n3. 输出指标报告支撑迭代决策。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python；\n3. 具备检索效果量化评测能力（hit@k、MRR 等指标）；\n4. 有评测集标注经验者优先。",
+  "source_url": "https://example.com/job/jd-056",
+  "fetched_at": "2026-10-06",
+  "gold_label": "borderline",
+  "gold_label_5": "表达缺口",
+  "gold_reasons": [
+    {
+      "type": "missing",
+      "rule_id": "none",
+      "quote": "具备检索效果量化评测能力（hit@k、MRR 等指标）",
+      "missing": "简历技能栈速览里没有 hit@5 / MRR 字样"
+    }
+  ],
+  "difficulty": "medium",
+  "is_hard_threshold": false,
+  "expected_stage": null,
+  "required_sections": [
+    "verdict",
+    "verdict_5",
+    "missing_info[]"
+  ],
+  "must_not": [
+    "在信息不足时猜测输出 apply 或 reject",
+    "编造 JD 里没有的条件来支撑结论",
+    "把『信息不足』表述成『不匹配』",
+    "为 borderline 题产出改写稿"
+  ],
+  "note": "锚点：能力词只出现在『万涵云信』第 5 条的职责描述里，没进技能栏 → 该系统给『补哪句话』的建议，不是拦"
+}
