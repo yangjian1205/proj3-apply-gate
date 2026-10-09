@@ -1,0 +1,60 @@
+# 密钥与虚拟环境（绝对不能入库）
+.env
+venv/
+.venv/
+env/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# 运行期数据（都是本机产物，别人 clone 下来自己跑就有了）
+data/audit.db
+data/audit.db-wal
+data/audit.db-shm
+data/checkpoint.db
+data/checkpoint.db-wal
+data/checkpoint.db-shm
+data/workbench_snapshot.json
+output/
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── 个人档案（绝不入库）────────────────────────────────────────────
+# 这几个文件含手机号 / 邮箱 / 真实公司名与学校名。上传前务必确认它们只在本机。
+# 仓库里放的是同名 *.example.* 模板（已脱敏），使用者 clone 后复制改名再填自己的。
+data/profile/resume.md
+data/profile/candidate_profile.json
+data/profile/candidate_profile.md
+data/profile/experience_bank.md
+data/profile/answer_bank.md
+data/profile/application_rules.md
+data/profile/resume_routing.md
+data/ledger.json
+# 网页上传简历时自动留的旧版备份（含个人信息）
+data/profile/backups/
+
+# 注意：下面这些「不入库」的写法不要加行内注释，
+# 因为 .gitignore 不支持行内注释 —— 加了注释整行规则会失效（实测踩过）。
+# data/generated/ 里的三份真源派生物**刻意入库**：rules_book.md / prompt_rules.txt / rule_ids.json
+# 它们由 scripts/gen_from_rules.py 从 data/rules.json 生成，不含任何个人信息，
+# 入库是为了让别人 clone 下来就能看到规则说明书，无需先跑生成命令。
+#
+# 但下面这几个 generated 产物含个人信息或依赖个人档案，必须排除：
+#   dashboard.html    —— 内联了简历正文（resume_base）与改写稿（draft_lines）
+#   ledger_check.json —— 由使用者的 ledger.json 生成
+#   eval_report.json / compare_report.json —— 本机跑出来的结果
+data/generated/dashboard.html
+data/generated/ledger_check.json
+data/generated/eval_report.json
+data/generated/compare_report.json
+
+# data/eval_profile.json 也是刻意入库的：它是评测固定档案，与使用者档案解耦，
+# 门禁靠它才能稳定复现（内容已脱敏，不含个人信息）。
