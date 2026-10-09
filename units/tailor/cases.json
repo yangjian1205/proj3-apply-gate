@@ -1,0 +1,133 @@
+{
+  "unit": "tailor",
+  "note": "改写本身要用模型，所以离线用例测的是「输入组装」与「失败策略」；真正的红线由下游 provenance 兜底（见 units/provenance/cases.json）。",
+  "failure_policy": [
+    {
+      "case": "模型输出不合 schema",
+      "expect": "重试 1 次"
+    },
+    {
+      "case": "重试仍失败",
+      "expect": "抛 TailorError，不产出半成品"
+    },
+    {
+      "case": "模型返回空正文",
+      "expect": "抛 TailorError，拒绝产出残稿"
+    },
+    {
+      "case": "被 provenance 打回",
+      "expect": "带 missed 清单重写，轮数 +1"
+    },
+    {
+      "case": "轮数达到上限（3）",
+      "expect": "退出子图并标 verify_failed，不带病出稿"
+    }
+  ],
+  "prompt_contract": {
+    "allowed": [
+      "重排顺序",
+      "重述措辞",
+      "从经历库卡片挑最相关的重组"
+    ],
+    "forbidden": [
+      "新增原简历没有的数字 / 百分比 / 金额 / 年限 / 人数 / 日期 / 公司名 / 学校名 / 职级 / 证书名",
+      "新增原简历没有的技术名词（尤其是「熟练 X」这类能力断言）",
+      "把「原型/技术验证」写成「已上线 / 生产环境 / 服务 N 用户」",
+      "编造经历库之外的任何经历"
+    ],
+    "why_code_not_prompt": "红线写在 prompt 里只是第一道；真正兜底的是 provenance —— 写出去必被拆成事实原子逐个核对，编了过不了门。"
+  },
+  "strategies": {
+    "note": "改写策略由 planner 在多个合理选项间选（这是 planner 真正行使调度权的地方）",
+    "options": [
+      "project_first",
+      "experience_first",
+      "balanced"
+    ]
+  },
+  "mapping_cases": {
+    "note": "逐条改写处方的代码核对，逻辑在 units/tailor/impl.py 的 verify_mapping。这是「教人改简历」最容易出事的地方 —— 模型很乐意替你润色出一条你没做过的经历，写上简历面试一问就穿。所以每条处方声称的「简历素材」都回原文核一遍，核不上就整条降级为「真实缺口」并把那段编出来的话抹掉。",
+    "jd": "任职要求：本科及以上学历，3 年以上 Python 开发经验；熟悉 RAG 检索增强与向量数据库；有 Docker 部署经验优先。",
+    "resume": "杨健 / 本科 / 2025 年毕业 / 1 年经验。项目：企业知识库问答系统，实现向量 + BM25 双路召回与 RRF 融合，用 Python 与 FastAPI 完成。",
+    "cases": [
+      {
+        "id": "map-001",
+        "desc": "素材确有出处、模型却误判为缺口 → 上调为可强化（不能低估自己）",
+        "item": {
+          "jd_requirement": "工作经验",
+          "jd_quote": "3 年以上 Python 开发经验",
+          "resume_evidence": "1 年经验",
+          "suggestion": "如实写 1 年",
+          "status": "真实缺口"
+        },
+        "expect_status": "可强化",
+        "expect_evidence": "1 年经验"
+      },
+      {
+        "id": "map-002",
+        "desc": "素材是编的（简历里找不到）→ 降级为缺口，并抹掉那段素材不展示",
+        "item": {
+          "jd_requirement": "向量库经验",
+          "jd_quote": "熟悉 RAG 检索增强与向量数据库",
+          "resume_evidence": "负责 5000 份文档的向量库运维",
+          "suggestion": "…",
+          "status": "可强化"
+        },
+        "expect_status": "真实缺口",
+        "expect_evidence": ""
+      },
+      {
+        "id": "map-003",
+        "desc": "没给素材却说「已覆盖」→ 自相矛盾，降级为缺口",
+        "item": {
+          "jd_requirement": "Docker",
+          "jd_quote": "有 Docker 部署经验优先",
+          "resume_evidence": "",
+          "suggestion": "…",
+          "status": "已覆盖"
+        },
+        "expect_status": "真实缺口",
+        "expect_evidence": ""
+      },
+      {
+        "id": "map-004",
+        "desc": "真实缺口（本来就该是缺口）→ 保持不动",
+        "item": {
+          "jd_requirement": "Docker",
+          "jd_quote": "有 Docker 部署经验优先",
+          "resume_evidence": "",
+          "suggestion": "别编",
+          "status": "真实缺口"
+        },
+        "expect_status": "真实缺口",
+        "expect_evidence": ""
+      },
+      {
+        "id": "map-005",
+        "desc": "JD 引文是凭空编的 → quote 核对必须判失败",
+        "item": {
+          "jd_requirement": "容器编排",
+          "jd_quote": "要求精通 Kubernetes 与 Service Mesh",
+          "resume_evidence": "用 Python 与 FastAPI 完成",
+          "suggestion": "…",
+          "status": "可强化"
+        },
+        "expect_status": "可强化",
+        "expect_quote_verified": false
+      },
+      {
+        "id": "map-006",
+        "desc": "JD 引文逐字出自原文 → quote 核对通过",
+        "item": {
+          "jd_requirement": "学历",
+          "jd_quote": "本科及以上学历",
+          "resume_evidence": "本科",
+          "suggestion": "…",
+          "status": "已覆盖"
+        },
+        "expect_status": "已覆盖",
+        "expect_quote_verified": true
+      }
+    ]
+  }
+}

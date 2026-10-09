@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>proj3 工作台 · 投递决策闸门</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --ink:#1e293b; --sub:#64748b; --line:#e2e8f0;
+    --blue:#2563eb; --blue-bg:#eff6ff; --teal:#0d9488; --teal-bg:#f0fdfa;
+    --amber:#b45309; --amber-bg:#fffbeb; --red:#dc2626; --red-bg:#fef2f2;
+    --indigo:#4f46e5; --indigo-bg:#eef2ff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; font-size:14px; line-height:1.7;}
+  .wrap{max-width:1240px; margin:0 auto; padding:20px 18px 60px;}
+
+  .hero{background:linear-gradient(135deg,#0f172a,#1e3a8a 55%,#0d9488); color:#fff; border-radius:14px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .hero h1{font-size:19px;}
+  .hero .meta{font-size:12px; opacity:.88; margin-top:3px;}
+  .hero-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  button{font-family:inherit; font-size:13px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:8px; padding:6px 13px; cursor:pointer; transition:.12s;}
+  button:hover:not(:disabled){border-color:#94a3b8;}
+  button.primary{background:var(--blue); border-color:var(--blue); color:#fff;}
+  button.primary:hover:not(:disabled){background:#1d4ed8;}
+  button.ok{background:var(--teal); border-color:var(--teal); color:#fff;}
+  button.ghost{background:transparent; border-color:rgba(255,255,255,.5); color:#fff;}
+  button.danger{background:var(--red); border-color:var(--red); color:#fff;}
+  button.big{font-size:15px; padding:10px 26px; font-weight:700;}
+  button:disabled{opacity:.55; cursor:default;}
+
+  .stats{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin:14px 0;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 14px;}
+  .stat-value{font-size:21px; font-weight:700; line-height:1.25;}
+  .stat-label{font-size:12px; color:var(--sub);}
+  .stat.apply .stat-value{color:var(--teal);} .stat.reject .stat-value{color:var(--red);}
+  .stat.border .stat-value{color:var(--amber);} .stat.pending .stat-value{color:var(--indigo);}
+
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:14px;}
+  .panel-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;}
+  .panel-title{font-weight:700;}
+  .panel-hint{font-size:12px; color:var(--sub);}
+
+  textarea{width:100%; min-height:130px; border:1px solid var(--line); border-radius:10px; padding:11px 13px; font-family:inherit; font-size:13.5px; line-height:1.75; resize:vertical; color:var(--ink); background:#fcfdff;}
+  textarea:focus{outline:none; border-color:var(--blue); background:#fff;}
+  .meta-row{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px;}
+  .meta-row input{border:1px solid var(--line); border-radius:8px; padding:6px 11px; font-size:13px; font-family:inherit; flex:1; min-width:150px;}
+  .meta-row input:focus{outline:none; border-color:var(--blue);}
+  .submit-row{display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap;}
+
+  .badge{font-size:11.5px; font-weight:700; border-radius:999px; padding:1px 9px; white-space:nowrap;}
+  .badge.apply{background:var(--teal-bg); color:var(--teal);}
+  .badge.reject{background:var(--red-bg); color:var(--red);}
+  .badge.borderline{background:var(--amber-bg); color:var(--amber);}
+  .badge.pending{background:var(--indigo-bg); color:var(--indigo);}
+  .badge.big{font-size:15px; padding:5px 18px;}
+
+  .quote-box{background:#f8fafc; border:1px solid var(--line); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:10px 13px; font-size:13px; line-height:1.95; margin:8px 0;}
+  .quote-box.ok{border-left-color:var(--teal);}
+  .quote-box.warn{border-left-color:var(--amber);}
+  .kv{display:flex; gap:8px; font-size:13px; margin:3px 0;}
+  .kv b{flex:0 0 88px; color:var(--sub); font-weight:600;}
+  ul.reasons{margin-left:18px; font-size:13px;}
+  h3.blk{font-size:13.5px; margin:14px 0 6px; color:var(--indigo);}
+  .empty{padding:22px 12px; text-align:center; color:var(--sub); font-size:13px;}
+
+  .grid{display:grid; grid-template-columns:340px minmax(0,1fr); gap:14px; align-items:start;}
+  .row{display:flex; align-items:center; gap:8px; padding:9px 10px; border-radius:9px; cursor:pointer; border:1px solid transparent;}
+  .row:hover{background:#f8fafc;}
+  .row.on{background:var(--blue-bg); border-color:#bfdbfe;}
+  .row .who{flex:1; min-width:0;}
+  .row .company{font-weight:600; font-size:13.5px;}
+  .row .position{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .row .jd{font-size:11px; color:#94a3b8; font-variant-numeric:tabular-nums;}
+
+  .tabs{display:flex; gap:4px; border-bottom:1px solid var(--line); margin:8px 0 12px; flex-wrap:wrap;}
+  .tab{border:0; background:transparent; border-bottom:2px solid transparent; border-radius:0; padding:6px 12px; font-size:13px; color:var(--sub);}
+  .tab.on{color:var(--blue); border-bottom-color:var(--blue); font-weight:700;}
+
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .col-head{font-size:12.5px; font-weight:700; color:var(--sub); margin-bottom:6px;}
+  .line{padding:5px 9px; border-radius:7px; font-size:12.5px; line-height:1.85; margin-bottom:4px; border:1px solid transparent;}
+  .line .no{color:#94a3b8; font-size:11px; margin-right:5px;}
+  .line.hit{background:#fffbeb; border-color:#fde68a;}
+  .line.bad{background:var(--red-bg); border-color:#fecaca;}
+  .line.flash{animation:flash 1.1s ease;}
+  @keyframes flash{0%{background:#bfdbfe;} 100%{background:transparent;}}
+  .atom{display:inline-block; border-bottom:1px dashed #2563eb; cursor:pointer;}
+  .atom.bad{color:var(--red); border-bottom-color:var(--red); font-weight:600;}
+  .atom:hover{background:#dbeafe;}
+
+  .timeline{font-size:12.5px; margin-top:6px;}
+  .tl-item{display:grid; grid-template-columns:66px 158px minmax(0,1fr); gap:8px; padding:5px 0; border-bottom:1px dashed var(--line);}
+  .tl-item span:first-child{color:var(--sub); font-variant-numeric:tabular-nums;}
+  .tl-item .flowto{font-weight:600;}
+  .bar{height:6px; background:#eef2f7; border-radius:99px; overflow:hidden; flex:1; margin-top:7px;}
+  .bar > i{display:block; height:100%; background:var(--blue);}
+
+  /* ── ① 简历上传 ── */
+  .dropzone{border:2px dashed var(--line); border-radius:12px; padding:20px 16px; text-align:center; background:#fbfdff; transition:.15s; cursor:pointer;}
+  .dropzone:hover{border-color:var(--blue); background:var(--blue-bg);}
+  .dropzone.over{border-color:var(--teal); background:var(--teal-bg);}
+  .dropzone u{color:var(--blue); cursor:pointer;}
+  .resume-card{display:flex; align-items:center; gap:12px; flex-wrap:wrap; border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:0 8px 8px 0; padding:10px 13px; margin-top:10px; background:#fff;}
+  .resume-card.warn{border-left-color:var(--amber); background:var(--amber-bg);}
+  .resume-card .rc-main{flex:1 1 300px; min-width:200px;}
+  .resume-card .rc-title{font-weight:600; font-size:13.5px;}
+  .resume-card .rc-meta{font-size:12px; color:var(--sub); margin-top:2px;}
+  .profile-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:10px; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);}
+  .profile-grid label{display:block; font-size:12px; color:var(--sub); font-weight:600; margin-bottom:3px;}
+  .profile-grid input, .profile-grid select{width:100%; border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff;}
+  .profile-grid .chk{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink); padding-top:18px;}
+  .note{background:var(--amber-bg); border:1px solid #fde68a; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  .err{background:var(--red-bg); border:1px solid #fecaca; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  .okbox{background:var(--teal-bg); border:1px solid #99f6e4; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  /* ── 「怎么改简历」视图 ── */
+  .map-item{border:1px solid var(--line); border-left:3px solid var(--line); border-radius:0 8px 8px 0; padding:10px 13px; margin:9px 0; background:#fff;}
+  .map-item.gap{border-left-color:var(--red); background:var(--red-bg);}
+  .map-item.improve{border-left-color:var(--amber); background:var(--amber-bg);}
+  .map-item.done{border-left-color:var(--teal);}
+  .map-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; font-size:13.5px;}
+  .map-idx{flex:0 0 20px; height:20px; line-height:20px; text-align:center; border-radius:5px; background:#e2e8f0; color:var(--sub); font-size:11px;}
+  .map-badge{margin-left:auto; font-size:11px; padding:2px 9px; border-radius:20px; font-weight:600; white-space:nowrap;}
+  .map-badge.done{background:var(--teal-bg); color:var(--teal); border:1px solid #99f6e4;}
+  .map-badge.improve{background:var(--amber-bg); color:var(--amber); border:1px solid #fde68a;}
+  .map-badge.gap{background:var(--red-bg); color:var(--red); border:1px solid #fecaca;}
+  .map-row{display:flex; gap:8px; font-size:12.8px; margin:3px 0; line-height:1.8;}
+  .map-k{flex:0 0 62px; color:var(--sub); font-weight:600;}
+  .map-row.sug{background:rgba(255,255,255,.75); border-radius:6px; padding:5px 9px; margin-top:5px;}
+  .map-note{font-size:11.5px; color:var(--amber); margin-top:5px;}
+  .muted{color:var(--sub);}
+  .footer{color:var(--sub); font-size:12px; text-align:center; margin-top:26px;}
+
+  .spin{display:inline-block; width:13px; height:13px; border:2px solid #cbd5e1; border-top-color:var(--blue); border-radius:50%; animation:sp .8s linear infinite; vertical-align:-2px; margin-right:7px;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+  .loading-box{padding:18px; text-align:center; color:var(--sub); font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div>
+      <h1>proj3 工作台 · 投递决策闸门</h1>
+      <div class="meta" id="heroMeta">正在连接…</div>
+    </div>
+    <div class="hero-actions">
+      <button class="ghost" id="btnRefresh">刷新数据</button>
+      <button class="ghost" id="btnCost">成本明细</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <!-- ══ ① 我的简历与档案 ══ -->
+  <div class="panel" id="panelResume">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">① 我的简历与档案 <span class="panel-hint" id="resumeHint"></span></div>
+        <div class="panel-hint">传一次就行，之后所有判定与改写都用它 —— 不用去改任何文件。</div>
+      </div>
+      <button id="btnProfileToggle">档案设置</button>
+    </div>
+
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="resumeFile" accept=".pdf,.txt,.md,.markdown,.text" hidden>
+      <div><b>把简历拖到这里</b>，或 <u id="pickFile">点这里选文件</u></div>
+      <div class="panel-hint" style="margin-top:4px">支持 PDF / txt / md（Word 请先「另存为 PDF」）。
+        上传会替换当前简历，旧版自动备份。</div>
+    </div>
+
+    <div id="resumeStatus"></div>
+    <div id="profileForm"></div>
+  </div>
+
+  <!-- ══ ② 判一个岗位 ══ -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">② 判一个岗位</div>
+        <div class="panel-hint">在招聘网站选中 JD 全文 → Ctrl+C → 粘到下面的框里 → 点「开始判定」</div>
+      </div>
+      <button id="btnPaste">从剪贴板粘贴</button>
+    </div>
+    <textarea id="jdText" placeholder="把 JD 全文粘在这里…&#10;&#10;（判「不该投」的岗位 0 秒出结果、不花钱；判「该投」的会花 10—15 秒改写简历并做溯源校验，然后挂起等你点头）"></textarea>
+    <div class="meta-row">
+      <input id="jdCompany" placeholder="公司名（可选）">
+      <input id="jdTitle" placeholder="岗位名（可选）">
+      <input id="jdCity" placeholder="城市（可选）">
+    </div>
+    <div class="submit-row">
+      <button class="primary big" id="btnJudge">开始判定</button>
+      <span class="panel-hint" id="judgeHint">公司 / 岗位名不填也能判，只是列表里会显示「未标注」</span>
+    </div>
+    <div id="judgeResult"></div>
+  </div>
+
+  <!-- ══ 2 · 待审批 ══ -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">③ 待审批 <span class="panel-hint" id="pendingHint"></span></div>
+        <div class="panel-hint">系统没有你的批准就拿不到可投递稿 —— 这里点「批准出稿」之后，稿子才写到 output/&lt;jd_id&gt;/</div>
+      </div>
+    </div>
+    <div id="pendingList"></div>
+  </div>
+
+  <!-- ══ 3 · 历史记录 ══ -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">④ 历史记录</div>
+        <div class="panel-hint">点左侧任意一条 → 右侧看「判定详情 / 溯源对比 / 审计时间线」</div>
+      </div>
+      <input type="search" id="search" placeholder="搜索公司或岗位…">
+    </div>
+    <div class="grid">
+      <div class="panel" style="border:1px solid var(--line); padding:8px; max-height:70vh; overflow:auto;">
+        <div id="jdList"></div>
+      </div>
+      <div class="panel" style="border:1px solid var(--line);" id="detail"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    硬门槛判定走纯代码（零漏放、不花钱）· 改写稿逐事实原子溯源 · 出稿前必须人工点头<br>
+    本项目不爬招聘网站、不填表、<b>不替你点提交</b> —— 最后一步永远由你自己做。
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   工作台前端：所有数据都来自本地后端接口，不内联、不缓存。
+   一条铁律：审批动作必须打接口（后端会重新查会话是否真挂着），
+   绝不允许「看板显示待审批 → 前端就当它挂着」。
+   ═══════════════════════════════════════════════════════════════ */
+const $ = (s) => document.querySelector(s);
+let state = { records: [], current: null, pending: [], tab: 'verdict' };
+
+const VERDICT_CLASS = { apply: 'apply', reject: 'reject', borderline: 'borderline' };
+const STAGE5_HINT = {
+  '已匹配': '硬门槛全过、证据充分 → 该投',
+  '表达缺口': '简历正文没写清这项能力 → 建议补一句，不是拦你',
+  '证据不足': '材料暗示可能具备，但撑不起对外表述 → 交人工',
+  '真实缺口': '事实明确不满足 → 不该投',
+  '待确认': 'JD 原文没提这项条件 → 信息不足，交人工',
+};
+
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function money(v){ return '¥' + Number(v || 0).toFixed(4); }
+function pct(v){ return (Number(v || 0) * 100).toFixed(1) + '%'; }
+
+async function api(path, opts){
+  const res = await fetch(path, Object.assign({headers: {'Content-Type': 'application/json'}}, opts || {}));
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+  return data;
+}
+
+/* ── 顶部统计 ── */
+async function loadStats(){
+  const [js, ap, ct] = await Promise.all([
+    api('/judgements?limit=500'), api('/approvals'), api('/cost'),
+  ]);
+  state.records = js.items || [];
+  state.pending = ap.items || [];
+  state.pendingStale = ap.stale_count || 0;
+  const n = state.records.length;
+  const cnt = (v) => state.records.filter(r => r.verdict === v).length;
+  const stages = {};
+  state.records.forEach(r => { if (r.verdict_5) stages[r.verdict_5] = (stages[r.verdict_5] || 0) + 1; });
+
+  $('#stats').innerHTML = `
+    <div class="stat"><div class="stat-value">${n}</div><div class="stat-label">累计判定</div></div>
+    <div class="stat apply"><div class="stat-value">${cnt('apply')}</div><div class="stat-label">该投</div></div>
+    <div class="stat reject"><div class="stat-value">${cnt('reject')}</div><div class="stat-label">不该投</div></div>
+    <div class="stat border"><div class="stat-value">${cnt('borderline')}</div><div class="stat-label">边界</div></div>
+    <div class="stat pending"><div class="stat-value">${state.pending.length}</div><div class="stat-label">待审批</div></div>
+    <div class="stat"><div class="stat-value">${money(ct.cost_cny)}</div><div class="stat-label">累计花费 · ${ct.calls} 次调用</div></div>`;
+
+  $('#heroMeta').textContent = `已判定 ${n} 个岗位 · 待审批 ${state.pending.length} 条 · 累计 ${money(ct.cost_cny)}`;
+  renderPending();
+  renderList();
+}
+
+/* ── ① 判定 ── */
+/* ── ① 我的简历与档案 ── */
+const DEGREES = [['大专及以下', 1], ['本科', 2], ['硕士', 3], ['博士', 4]];
+
+async function loadResume(){
+  const d = await api('/resume');
+  state.resume = d;
+  const hint = $('#resumeHint');
+  const box = $('#resumeStatus');
+  if (!d.exists){
+    hint.textContent = '';
+    box.innerHTML = `<div class="resume-card warn"><div class="rc-main">
+      <div class="rc-title">还没有简历</div>
+      <div class="rc-meta">先上传一份，判定与改写才有依据</div></div></div>`;
+    return;
+  }
+  if (d.is_example){
+    hint.textContent = '（当前是示例简历，不是你的）';
+    box.innerHTML = `<div class="resume-card warn"><div class="rc-main">
+      <div class="rc-title">⚠️ 现在用的是示例简历，不是你的</div>
+      <div class="rc-meta">${d.chars} 字 / ${d.lines} 行 · 判定只演示流程，不代表你。
+        把上面那份换成你自己的简历即可。</div></div></div>`;
+    return;
+  }
+  hint.textContent = '';
+  const bks = d.backups || [];
+  box.innerHTML = `<div class="resume-card"><div class="rc-main">
+    <div class="rc-title">✅ 已加载你的简历</div>
+    <div class="rc-meta">${d.chars} 字 / ${d.lines} 行 · 更新于 ${esc(d.updated_at)}</div></div>
+    <button id="btnPeekResume">看内容</button>
+    ${bks.length ? `<button id="btnBackups">旧版备份 ${bks.length}</button>` : ''}
+  </div>
+  <div id="resumePreview"></div>
+  <div id="resumeBackups"></div>`;
+
+  $('#btnPeekResume').addEventListener('click', () => {
+    const holder = $('#resumePreview');
+    if (holder.innerHTML){ holder.innerHTML = ''; $('#btnPeekResume').textContent = '看内容'; return; }
+    holder.innerHTML = `<div class="quote-box" style="white-space:pre-wrap; max-height:62vh; overflow:auto">${esc(d.preview)}</div>`;
+    $('#btnPeekResume').textContent = '收起';
+  });
+
+  const bb = $('#btnBackups');
+  if (bb) bb.addEventListener('click', () => {
+    const holder = $('#resumeBackups');
+    if (holder.innerHTML){ holder.innerHTML = ''; return; }
+    holder.innerHTML = `<div class="note" style="margin-top:8px">
+      <b>旧版备份</b> —— 每次上传都会自动留一份，可随时恢复：<br>
+      ${bks.map(b => `<div class="kv"><b>${esc(b.updated_at)}</b>
+        <span>${(b.bytes / 1024).toFixed(1)} KB</span>
+        <button data-restore="${esc(b.name)}" style="margin-left:auto">恢复这一版</button></div>`).join('')}
+      <div class="panel-hint" style="margin-top:6px">恢复前会把「当前这版」也存一份 —— 恢复错了还能再回来。</div>
+    </div>`;
+  });
+}
+
+async function restoreResume(name){
+  if (!confirm(`把简历恢复成这一版？\n\n${name}\n\n当前这版会先自动备份，恢复错了还能回来。`)) return;
+  const r = await api(`/resume/restore/${encodeURIComponent(name)}`, {method: 'POST'});
+  await loadResume();
+  $('#resumeStatus').insertAdjacentHTML('afterbegin', `<div class="okbox">${esc(r.message)}</div>`);
+}
+
+async function uploadResume(file){
+  const box = $('#resumeStatus');
+  box.innerHTML = `<div class="loading-box"><span class="spin"></span>正在解析 ${esc(file.name)} …</div>`;
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/resume/upload', {method: 'POST', body: fd});
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+  await loadResume();
+  box.insertAdjacentHTML('afterbegin', `<div class="okbox">${esc(data.message)}　之后判 JD 就用这一份了。</div>`);
+  // 简历换了，档案也得跟上 —— 先把表单摊开
+  profileOpen = true;
+  await loadProfile();
+}
+
+let profileOpen = false;
+
+async function loadProfile(){
+  const p = await api('/profile');
+  state.profile = p;
+  if (!profileOpen) { $('#profileForm').innerHTML = ''; return; }
+  const f = p.fields || {};
+  const deg = DEGREES.map(([t, v]) =>
+    `<option value="${v}"${v === f.degree_level ? ' selected' : ''}>${t}</option>`).join('');
+  $('#profileForm').innerHTML = `
+    <div class="profile-grid">
+      <div><label>期望工作城市（逗号分隔，必填）</label>
+        <input id="pfCities" value="${esc((f.expected_cities || []).join('、'))}" placeholder="上海、杭州"></div>
+      <div><label>最高学历</label>
+        <select id="pfDegree"><option value="">未填</option>${deg}</select></div>
+      <div><label>工作年限（年）</label>
+        <input id="pfYears" type="number" step="0.5" min="0" value="${f.years_experience ?? ''}"></div>
+      <div><label>期望薪资</label>
+        <input id="pfSalary" value="${esc(f.expected_salary || '')}" placeholder="面议"></div>
+      <div><label>证书（逗号分隔）</label>
+        <input id="pfCerts" value="${esc((f.certificates || []).join('、'))}" placeholder="HCIP-AI 备考中"></div>
+      <label class="chk"><input type="checkbox" id="pfRemote"${f.accept_remote ? ' checked' : ''}> 接受远程</label>
+      <label class="chk"><input type="checkbox" id="pfRelocate"${f.accept_relocate ? ' checked' : ''}> 接受异地</label>
+    </div>
+    <div class="submit-row" style="margin-top:12px">
+      <button class="primary" id="btnSaveProfile">保存档案</button>
+      <span class="panel-hint">${p.confirmed
+        ? '已确认。城市 / 学历 / 年限变了就改这里 —— 它们直接决定硬门槛判不判。'
+        : '⚠️ <b>还没确认</b> —— 不填的话，「base 某地 + 坐班」这类硬门槛判定不可信'}</span>
+    </div>`;
+  $('#btnSaveProfile').addEventListener('click', () => saveProfile().catch(e => alert(e.message)));
+}
+
+async function saveProfile(){
+  const split = (v) => v.split(/[、,，\s]+/).map(s => s.trim()).filter(Boolean);
+  const payload = {
+    expected_cities: split($('#pfCities').value),
+    accept_remote: $('#pfRemote').checked,
+    accept_relocate: $('#pfRelocate').checked,
+    expected_salary: $('#pfSalary').value.trim(),
+    certificates: split($('#pfCerts').value),
+    highest_degree: $('#pfDegree').selectedOptions[0]?.textContent || '',
+    degree_level: $('#pfDegree').value ? Number($('#pfDegree').value) : null,
+    years_experience: $('#pfYears').value ? Number($('#pfYears').value) : null,
+  };
+  if (!payload.expected_cities.length){ alert('期望工作城市不能空 —— 它决定城市类硬门槛判不判'); return; }
+  const r = await api('/profile', {method: 'POST', body: JSON.stringify(payload)});
+  await loadProfile();
+  $('#resumeStatus').insertAdjacentHTML('afterbegin',
+    `<div class="okbox">${esc(r.message)}</div>`);
+}
+
+async function toggleProfile(){
+  profileOpen = !profileOpen;
+  $('#btnProfileToggle').textContent = profileOpen ? '收起档案' : '档案设置';
+  await loadProfile();
+}
+
+/* ── 拖拽上传 ── */
+function bindDropzone(){
+  const dz = $('#dropzone'), input = $('#resumeFile');
+  const pick = () => input.click();
+  dz.addEventListener('click', pick);
+  input.addEventListener('change', () => {
+    if (input.files[0]) uploadResume(input.files[0]).catch(e => alert(e.message));
+    input.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => {
+    e.preventDefault(); dz.classList.add('over');
+  }));
+  ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => {
+    e.preventDefault(); dz.classList.remove('over');
+  }));
+  dz.addEventListener('drop', e => {
+    const f = e.dataTransfer?.files?.[0];
+    if (f) uploadResume(f).catch(err => alert(err.message));
+  });
+}
+
+async function doJudge(){
+  const text = $('#jdText').value.trim();
+  if (text.length < 20){ alert('JD 太短了（至少 20 字）。先把 JD 全文贴上。'); return; }
+  const btn = $('#btnJudge');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>判定中…';
+  $('#judgeHint').textContent = '判「不该投」的几秒内出结果且不花钱；判「该投」的要改写简历 + 溯源，约 10—15 秒…';
+  $('#judgeResult').innerHTML = '<div class="loading-box"><span class="spin"></span>正在跑：硬门槛闸 → 打分分类 → 改写 → 溯源校验</div>';
+  try {
+    const r = await api('/judge', {method: 'POST', body: JSON.stringify({
+      jd_text: text,
+      company: $('#jdCompany').value.trim(),
+      title: $('#jdTitle').value.trim(),
+      city: $('#jdCity').value.trim(),
+    })});
+    state.lastJudge = r;
+    $('#judgeResult').innerHTML = renderJudgeResult(r);
+    await loadStats();
+    if (r.awaiting_approval) selectRecord(r.jd_id);
+  } catch (e){
+    $('#judgeResult').innerHTML = `<div class="err"><b>判定失败</b><br>${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '开始判定';
+    $('#judgeHint').textContent = '公司 / 岗位名不填也能判，只是列表里会显示「未标注」';
+  }
+}
+
+function renderJudgeResult(r){
+  const v = r.verdict || 'borderline';
+  let h = `<div class="panel" style="margin-top:14px; border:2px solid ${v === 'apply' ? 'var(--teal)' : v === 'reject' ? 'var(--red)' : 'var(--amber)'}">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="badge ${VERDICT_CLASS[v]} big">${esc(r.verdict_cn || v)}</span>
+      <span class="panel-hint">对内五态：<b>${esc(r.verdict_5 || '—')}</b>　${esc(STAGE5_HINT[r.verdict_5] || '')}</span>
+      <span class="panel-hint" style="margin-left:auto">${r.calls} 次模型调用 · ${money(r.cost_cny)}</span>
+    </div>`;
+
+  if (r.hard_flags && r.hard_flags.length){
+    h += `<h3 class="blk">命中硬规则 ${r.hard_flags.length} 条（纯代码判定，不经过模型）</h3>`;
+    r.hard_flags.forEach((f, i) => {
+      h += `<div class="quote-box"><b>${i + 1}. ${esc(f.rule_id)}</b><br>JD 原句：<mark>${esc(f.quote)}</mark></div>`;
+    });
+    h += `<div class="okbox">后续：未进入打分与改写环节 —— 本次 0 次模型调用、0 元。省下的就是一轮写材料的时间。</div>`;
+  } else {
+    h += `<div class="quote-box ok">未命中任何硬规则。</div>`;
+  }
+  if (r.hints && r.hints.length){
+    r.hints.forEach(x => { h += `<div class="quote-box warn">⚠️ 只提示不拦：JD 原句「${esc(x.quote)}」</div>`; });
+  }
+  if (r.score){
+    const s = r.score;
+    h += `<h3 class="blk">分项打分</h3>
+      <div class="kv"><b>相关度</b><span>${s.relevant}/10</span></div><div class="bar"><i style="width:${s.relevant * 10}%"></i></div>
+      <div class="kv"><b>职级</b><span>${s.level}/10</span></div><div class="bar"><i style="width:${s.level * 10}%"></i></div>
+      <div class="kv"><b>技能覆盖</b><span>${s.skill}/10</span></div><div class="bar"><i style="width:${s.skill * 10}%"></i></div>`;
+  }
+  if (r.reasons && r.reasons.length){
+    h += `<h3 class="blk">判定理由</h3><ul class="reasons">${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  }
+  if (r.missing_info && r.missing_info.length){
+    h += `<h3 class="blk">缺什么信息（所以交给你判断）</h3><ul class="reasons">${r.missing_info.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  }
+  if (r.provenance){
+    const p = r.provenance;
+    h += `<h3 class="blk">溯源校验</h3><div class="quote-box ${p.passed ? 'ok' : ''}">
+      ${p.passed ? '✅ 全部找到出处' : '❌ 有未命中项'}　共 ${p.atom_count} 个事实原子`;
+    if (p.missed && p.missed.length) h += `<br>未命中：${p.missed.map(m => `<mark>${esc(m)}</mark>`).join('　')}`;
+    if (p.stage_violations && p.stage_violations.length) h += `<br>⚠️ 性质升格 ${p.stage_violations.length} 处：${p.stage_violations.map(v => esc(v.atom)).join('、')}`;
+    h += `</div>`;
+  }
+  // 判完最该看的是「这份 JD 该怎么改简历」—— 直接摊在下面，不用再点 tab
+  if ((r.jd_mapping || []).length){
+    h += `<div style="border-top:1px dashed var(--line); margin-top:16px; padding-top:8px"></div>` + paneGuide(r);
+  }
+  if (r.awaiting_approval){
+    h += `<div class="note"><b>⏸ 稿件待审批 —— 现在还没有生成可投递稿</b><br>
+      上面是「该怎么改」的处方，还不是成品稿。往下看「③ 待审批」，点「批准出稿」才会写出
+      output/&lt;jd_id&gt;/resume.md 与 cover_letter.md。</div>`;
+  }
+  return h + `</div>`;
+}
+
+/* ── ② 待审批 ── */
+function renderPending(){
+  const box = $('#pendingList');
+  const stale = state.pendingStale || 0;
+  const staleNote = stale
+    ? `<div class="note">另有 <b>${stale}</b> 条历史待办记录未列出 —— 那些会话早就结束了，点了也会被拦下（409）。<br>
+        只列「真的还挂着」的待办，免得你对着一条点不动的单子浪费时间。</div>`
+    : '';
+  $('#pendingHint').textContent = state.pending.length ? `（${state.pending.length} 条）` : '';
+  if (!state.pending.length){
+    box.innerHTML = `<div class="empty">没有真正等你点头的稿子。判到「该投」的岗位会自动出现在这里。</div>` + staleNote;
+    return;
+  }
+  box.innerHTML = state.pending.map(t => `
+    <div class="row" style="border:1px solid var(--line); margin-bottom:8px; cursor:default;">
+      <div class="who">
+        <div class="company">${esc(t.jd_id)}</div>
+        <div class="position">单号 ${esc(t.ticket_id)} · 会话 ${esc(t.thread_id)} · ${esc(t.created_at)}</div>
+      </div>
+      <button class="ok" data-approve="${esc(t.ticket_id)}" data-thread="${esc(t.thread_id)}">批准出稿</button>
+      <button class="danger" data-reject="${esc(t.ticket_id)}" data-thread="${esc(t.thread_id)}">驳回</button>
+      <button data-view="${esc(t.jd_id)}">看详情</button>
+    </div>`).join('') + staleNote;
+}
+
+async function resolveApproval(ticket, thread, approved){
+  const reason = approved ? '' : (prompt('驳回理由（会记进审计表）：') || '');
+  if (!approved && reason === null) return;
+  try {
+    const r = await api('/approvals/' + encodeURIComponent(ticket), {method: 'POST',
+      body: JSON.stringify({approved, thread_id: thread, reason})});
+    alert(approved ? `已批准\n稿件：${r.resume_path}\n\n下一步：复制内容到招聘平台，由你自己点提交。` : '已驳回，本次不出稿。');
+    await loadStats();
+  } catch (e){
+    alert('失败：' + e.message + '\n\n（409 通常表示这个会话已经不处于挂起状态了 —— 服务重启过的话就会这样。重新判一次这个岗位即可。）');
+  }
+}
+
+/* ── ③ 历史 + 详情 ── */
+function renderList(){
+  const kw = ($('#search').value || '').trim().toLowerCase();
+  const rows = state.records.filter(r => !kw ||
+    (r.company || '').toLowerCase().includes(kw) || (r.title || '').toLowerCase().includes(kw) || (r.jd_id || '').includes(kw));
+  const box = $('#jdList');
+  if (!rows.length){ box.innerHTML = `<div class="empty">还没有记录。</div>`; return; }
+  box.innerHTML = rows.map(r => `
+    <div class="row ${state.current === r.jd_id ? 'on' : ''}" data-id="${esc(r.jd_id)}">
+      <div class="who">
+        <div class="company">${esc(r.company || '未标注')}</div>
+        <div class="position">${esc(r.title || r.jd_id)}</div>
+        <div class="jd">${esc(r.jd_id)} · ${money(r.cost_cny)} · ${esc((r.approval_status || ''))}</div>
+      </div>
+      <span class="badge ${VERDICT_CLASS[r.verdict] || 'borderline'}">${esc(cfg_cn(r.verdict))}</span>
+    </div>`).join('');
+}
+
+function cfg_cn(v){ return {apply: '该投', reject: '不该投', borderline: '边界'}[v] || '—'; }
+
+function selectRecord(jdId){
+  state.current = jdId;
+  renderList();
+  const r = state.records.find(x => x.jd_id === jdId);
+  if (!r){ $('#detail').innerHTML = `<div class="empty">找不到这条记录（可能刚写完还没刷进来，点右上角「刷新数据」）。</div>`; return; }
+  renderDetail(r);
+}
+
+function renderDetail(r){
+  const tabs = [
+    {k: 'verdict', t: '判定详情'},
+    {k: 'guide', t: '怎么改简历', n: (r.jd_mapping || []).length ? `（${r.jd_mapping.length} 条）` : '（不适用）'},
+    {k: 'compare', t: '溯源对比', n: (r.draft_lines || []).length ? '' : '（无改写稿）'},
+    {k: 'audit', t: '审计时间线', n: `（${(r.audit || []).length} 步）`},
+  ];
+  let h = `<div class="panel-head">
+      <div><div class="panel-title">${esc(r.company || '未标注')} · ${esc(r.title || '未标注')}</div>
+        <div class="panel-hint">${esc(r.jd_id)} · ${esc(r.city || '城市未标注')} · 抓取 ${esc(r.fetched_at || '—')}
+        ${r.stale ? '　⚠️ 可能已过期' : ''}</div></div>
+      <span class="badge ${VERDICT_CLASS[r.verdict] || 'borderline'}">${esc(cfg_cn(r.verdict))} · ${esc(r.verdict_5 || '—')}</span>
+    </div>`;
+  h += `<div class="tabs">${tabs.map(x => `<button class="tab ${state.tab === x.k ? 'on' : ''}" data-tab="${x.k}">${x.t}${x.n || ''}</button>`).join('')}</div>`;
+  const PANES = { verdict: paneVerdict, guide: paneGuide, compare: paneCompare, audit: paneAudit };
+  h += `<div>${(PANES[state.tab] || paneVerdict)(r)}</div>`;
+  $('#detail').innerHTML = h;
+}
+
+function paneVerdict(r){
+  let h = '';
+  const hf = r.hard_flags || [];
+  if (hf.length){
+    h += `<h3 class="blk">硬规则（纯代码判定）</h3>`;
+    hf.forEach(f => { h += `<div class="quote-box"><b>${esc(f.rule_id)}</b><br>JD 原句：<mark>${esc(f.quote)}</mark></div>`; });
+  } else h += `<div class="quote-box ok">未命中任何硬规则。</div>`;
+  (r.hints || []).forEach(x => { h += `<div class="quote-box warn">⚠️ 只提示不拦：「${esc(x.quote)}」</div>`; });
+
+  if (r.score && Object.keys(r.score).length){
+    h += `<h3 class="blk">分项打分（合计 ${(r.score.relevant || 0) + (r.score.level || 0) + (r.score.skill || 0)}/30）</h3>`;
+    h += `<div class="kv"><b>相关度</b><span>${r.score.relevant}/10</span></div><div class="bar"><i style="width:${(r.score.relevant || 0) * 10}%"></i></div>`;
+    h += `<div class="kv"><b>职级</b><span>${r.score.level}/10</span></div><div class="bar"><i style="width:${(r.score.level || 0) * 10}%"></i></div>`;
+    h += `<div class="kv"><b>技能覆盖</b><span>${r.score.skill}/10</span></div><div class="bar"><i style="width:${(r.score.skill || 0) * 10}%"></i></div>`;
+  }
+  if ((r.reasons || []).length) h += `<h3 class="blk">判定理由</h3><ul class="reasons">${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  if ((r.missing_info || []).length) h += `<h3 class="blk">缺什么信息</h3><ul class="reasons">${r.missing_info.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  if ((r.jd_mapping || []).length){
+    const gaps = r.jd_mapping.filter(x => x.status === '真实缺口').length;
+    h += `<div class="okbox">📝 这条还有 <b>${r.jd_mapping.length}</b> 条逐条改写处方${gaps ? `（含 <b>${gaps}</b> 条真实缺口）` : ''}
+      —— 切到「<b>怎么改简历</b>」看「JD 要什么 → 你简历里有什么 → 该怎么改」。</div>`;
+  }
+
+  h += `<h3 class="blk">状态与成本</h3>
+    <div class="kv"><b>审批状态</b><span>${esc(r.approval_status)}${r.ticket_id ? '　单号 ' + esc(r.ticket_id) : ''}</span></div>
+    <div class="kv"><b>改写轮数</b><span>${r.rewrite_round || 0}（上限 3）</span></div>
+    <div class="kv"><b>本条成本</b><span>${money(r.cost_cny)}　耗时 ${Number(r.elapsed || 0).toFixed(1)} 秒</span></div>`;
+
+  h += `<h3 class="blk">JD 原文（一个字都没有清洗）</h3>
+    <div class="quote-box" style="white-space:pre-wrap; border-left-color:#94a3b8;">${esc(r.jd_text)}</div>`;
+  return h;
+}
+
+function paneGuide(r){
+  const mp = r.jd_mapping || [];
+  if (!mp.length){
+    return `<div class="empty">这条没有逐条处方。<br><br>
+      「不该投」和「边界」的岗位本来就不进改写环节 —— 没有稿子要改，自然没有「怎么改」。<br>
+      想知道差在哪，切到「判定详情」看<b>判定理由</b>与<b>缺什么信息</b>。</div>`;
+  }
+  const order = {'可强化': 0, '已覆盖': 1, '真实缺口': 2};
+  const sorted = [...mp].sort((a, b) => order[a.status] - order[b.status]);
+  const gaps = mp.filter(x => x.status === '真实缺口');
+
+  let h = `<div class="panel-hint">把这份 JD 一条条拆开对照：<b>它要什么 → 你简历里有什么 → 该怎么改</b>。
+    每条建议里的数字、年限、公司名、技术名都过了代码核对 —— 核不上的一律按「真实缺口」处理，不教你编。</div>`;
+
+  if (gaps.length){
+    h += `<div class="err">⚠️ <b>${gaps.length} 条真实缺口 —— 这几条别编。</b><br>
+      缺口不会因为改措辞而消失。只有两条路：去做一个真的项目，或者面试时如实说明。</div>`;
+  }
+
+  h += `<h3 class="blk">逐条对照（共 ${mp.length} 条 · 该强化的排在前面）</h3>`;
+  sorted.forEach((x, i) => {
+    const cls = x.status === '真实缺口' ? 'gap' : x.status === '可强化' ? 'improve' : 'done';
+    h += `<div class="map-item ${cls}">
+      <div class="map-head"><span class="map-idx">${i + 1}</span><b>${esc(x.jd_requirement)}</b>
+        <span class="map-badge ${cls}">${esc(x.status)}</span></div>
+      <div class="map-row"><span class="map-k">JD 原句</span><span>${esc(x.jd_quote)}
+        ${x.quote_verified ? '' : '<mark>⚠️ 未与 JD 原文核对上</mark>'}</span></div>
+      <div class="map-row"><span class="map-k">你的素材</span><span>${
+        x.resume_evidence ? esc(x.resume_evidence) : '<i class="muted">（没有 —— 这是真实缺口）</i>'}</span></div>
+      <div class="map-row sug"><span class="map-k">怎么改</span><span>${esc(x.suggestion)}</span></div>
+      ${x.note ? `<div class="map-note">⚠️ 代码核对：${esc(x.note)}</div>` : ''}
+    </div>`;
+  });
+
+  if ((r.changes || []).length){
+    h += `<h3 class="blk">这次做了哪些重排与重述（共 ${r.changes.length} 条）</h3>
+      <ul class="reasons">${r.changes.map(c => `<li>${esc(c)}</li>`).join('')}</ul>`;
+  }
+  if (r.cover_letter){
+    h += `<h3 class="blk">招呼语（可直接用，也可以自己改）</h3>
+      <div class="quote-box ok" style="white-space:pre-wrap">${esc(r.cover_letter)}</div>`;
+  }
+  h += `<div class="note">📄 这份清单也落盘在 <code>output/${esc(r.jd_id)}/rewrite_guide.md</code>，可以直接打开照做。
+    <br>它的数据源是每条「你简历里的素材」——<b>素材空着的条目，就是你这次不该碰的地方</b>。</div>`;
+  return h;
+}
+
+function paneCompare(r){
+  const base = r.resume_base || [], draft = r.draft_lines || [];
+  if (!draft.length){
+    return `<div class="empty">这条没有改写稿。<br><br>
+      「不该投」和「边界」的岗位本来就不进改写环节 —— 这是省钱的设计，不是数据缺失。</div>`;
+  }
+  const left = base.map(l => `<div class="line" data-n="${l.n}"><span class="no">${l.n}</span>${esc(l.text)}</div>`).join('');
+  const right = draft.map(l => {
+    let text = esc(l.text);
+    (l.atoms || []).forEach(a => {
+      const safe = esc(a);
+      text = text.split(safe).join(`<span class="atom" data-target="${esc(a)}">${safe}</span>`);
+    });
+    return `<div class="line"><span class="no">${l.n}</span>${text}</div>`;
+  }).join('');
+  return `<div class="panel-hint" style="margin-bottom:8px">左：原简历（<b>只读母版，不可变</b>）　右：改写稿。
+    <b>点右侧带下划线的词 → 跳到左侧对应行</b>。左边找不到的词会标红 —— 那就是溯源会拦下的编造。</div>
+    <div class="compare">
+      <div><div class="col-head">原简历 ${base.length} 行</div>${left}</div>
+      <div><div class="col-head">改写稿 ${draft.length} 行 · 标注 ${draft.reduce((s, x) => s + (x.atoms || []).length, 0)} 个事实原子</div>${right}</div>
+    </div>`;
+}
+
+function paneAudit(r){
+  const rows = r.audit || [];
+  if (!rows.length) return `<div class="empty">没有审计记录。</div>`;
+  const names = {intake: 'JD 接入', hard_gate: '硬门槛闸', match_score: '匹配打分', tailor: '改写', provenance: '溯源校验',
+                 approval: '审批门', report: '报告落库', planner: '调度员', tailor_subgraph: '改写子图', EXIT: '退出子图', END: '结束'};
+  return `<div class="panel-hint">按接手顺序回放每次节点交接 —— 用来回答「这个结论是怎么走出来的」。</div>
+    <div class="timeline">${rows.map(a => `<div class="tl-item">
+      <span>${esc((a.ts || '').slice(11))}</span>
+      <span class="flowto">${esc(names[a.from] || a.from)} → ${esc(names[a.to] || a.to)}</span>
+      <span>${esc(a.reason)}</span></div>`).join('')}</div>`;
+}
+
+/* ── 成本明细 ── */
+async function showCost(){
+  const c = await api('/cost');
+  const rows = (c.by_node || []).map(x => `  ${x.node.padEnd(14)} ${String(x.calls).padStart(3)} 次   ¥${Number(x.cost || 0).toFixed(4)}`).join('\n');
+  alert(`累计成本：¥${Number(c.cost_cny).toFixed(4)}\n模型调用：${c.calls} 次\n输入 ${c.input_tokens} / 输出 ${c.output_tokens} tokens\n\n按节点：\n${rows || '  （暂无）'}`);
+}
+
+/* ── 事件绑定 ── */
+$('#btnJudge').addEventListener('click', doJudge);
+$('#btnRefresh').addEventListener('click', () => loadStats().catch(e => alert(e.message)));
+$('#btnCost').addEventListener('click', () => showCost().catch(e => alert(e.message)));
+$('#search').addEventListener('input', renderList);
+
+$('#btnPaste').addEventListener('click', async () => {
+  try {
+    const t = await navigator.clipboard.readText();
+    if (!t || t.length < 20){ alert('剪贴板里没有可用的文本（少于 20 字）。'); return; }
+    $('#jdText').value = t;
+  } catch (e){
+    alert('浏览器不允许直接读剪贴板。请手动在框里 Ctrl+V 粘贴。');
+  }
+});
+
+document.addEventListener('click', (ev) => {
+  const row = ev.target.closest('.row[data-id]');
+  if (row){ selectRecord(row.dataset.id); return; }
+  const view = ev.target.closest('button[data-view]');
+  if (view){ selectRecord(view.dataset.view); return; }
+  const rs = ev.target.closest('button[data-restore]');
+  if (rs){ restoreResume(rs.dataset.restore).catch(e => alert(e.message)); return; }
+  const ap = ev.target.closest('button[data-approve]');
+  if (ap){ resolveApproval(ap.dataset.approve, ap.dataset.thread, true); return; }
+  const rj = ev.target.closest('button[data-reject]');
+  if (rj){ resolveApproval(rj.dataset.reject, rj.dataset.thread, false); return; }
+  const tab = ev.target.closest('.tab[data-tab]');
+  if (tab){ state.tab = tab.dataset.tab; const r = state.records.find(x => x.jd_id === state.current); if (r) renderDetail(r); return; }
+  const atom = ev.target.closest('.atom');
+  if (atom){
+    const target = atom.dataset.target;
+    const hit = [...document.querySelectorAll('.line[data-n]')].find(l => l.textContent.includes(target));
+    if (hit){ hit.classList.add('flash'); hit.scrollIntoView({block: 'center', behavior: 'smooth'}); setTimeout(() => hit.classList.remove('flash'), 1200); }
+    else { atom.classList.add('bad'); }
+  }
+});
+
+$('#btnProfileToggle').addEventListener('click', () => toggleProfile().catch(e => alert(e.message)));
+bindDropzone();
+
+(async () => {
+  try {
+    await loadStats();
+    await loadResume();
+    await loadProfile();
+    // 档案没确认就自动摊开表单 —— 不摊开的话，城市/学历类硬门槛判不准，但使用者不会知道
+    if (!state.profile || !state.profile.confirmed){
+      profileOpen = true;
+      $('#btnProfileToggle').textContent = '收起档案';
+      await loadProfile();
+    }
+  } catch (e) {
+    $('#heroMeta').textContent = '连不上后端：' + e.message;
+    $('#stats').innerHTML = `<div class="err" style="grid-column:1/-1">连不上后端服务。<br>
+      请确认是用 <b>启动工作台.bat</b>（或 <code>python -m uvicorn server:app --port 8103</code>）启动的，而不是直接双击本文件。</div>`;
+  }
+})();
+</script>
+</body>
+</html>

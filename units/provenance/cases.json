@@ -1,0 +1,105 @@
+{
+  "unit": "provenance",
+  "note": "纯代码，不调模型。这里的每个 case 都是「编造 vs 真实」的对照，改判定逻辑必须先过这一组。",
+  "resume": "负责企业知识库建设，完成 Qwen3 LoRA 微调流程；检索侧实现向量 + BM25 双路召回与 RRF 融合，覆盖 214 个知识块；使用 Python 与 FastAPI；通过 Function Calling 接入订单与库存工具。",
+  "cases": [
+    {
+      "id": "pv-001",
+      "desc": "真实改写：全部原子都能溯源 → 放行",
+      "draft": "负责企业知识库建设，完成 Qwen3 LoRA 微调流程；使用 Python 与 FastAPI。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-002",
+      "desc": "A 类：假数字（5000 份文档）→ 必拦",
+      "draft": "负责企业知识库建设，覆盖 5000 份文档；使用 Python。",
+      "expect_passed": false,
+      "expect_missed_contains": ["5000"]
+    },
+    {
+      "id": "pv-003",
+      "desc": "A 类：真数字（214 个知识块）→ 放行",
+      "draft": "检索侧实现向量 + BM25 双路召回与 RRF 融合，覆盖 214 个知识块。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-004",
+      "desc": "C 类：性质升格（完成流程 → 已上线生产环境）→ 必拦",
+      "draft": "负责企业知识库建设，已上线生产环境，服务 3000 用户。",
+      "expect_passed": false,
+      "expect_stage_violations": ["已上线", "生产环境"]
+    },
+    {
+      "id": "pv-005",
+      "desc": "C 类：平级表述（完成流程 / 跑通链路）→ 放行",
+      "draft": "完成知识库问答链路，跑通双路召回与融合排序。",
+      "expect_passed": true,
+      "expect_stage_violations": []
+    },
+    {
+      "id": "pv-006",
+      "desc": "B 类：技术名词 + 能力断言，但简历里没有（Kafka）→ 必拦",
+      "draft": "负责企业知识库建设；熟练使用 Kafka 完成消息队列改造。",
+      "expect_passed": false,
+      "expect_missed_contains": ["Kafka"]
+    },
+    {
+      "id": "pv-007",
+      "desc": "B 类：技术名词在简历里有（FastAPI）→ 放行",
+      "draft": "使用 FastAPI 封装问答接口。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-008",
+      "desc": "规范化：中文数字『两百一十四』应等价于 214 → 放行",
+      "draft": "覆盖两百一十四 个知识块。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-009",
+      "desc": "规范化：全角与大小写差异不该误拦（RRF / rrf）",
+      "draft": "实现 ＲＲＦ 融合排序。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-010",
+      "desc": "归一化：『约 214 个』与『214 个』应视为同一事实",
+      "draft": "覆盖约 214 个知识块。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-011",
+      "desc": "回归：简历里写着的技术名词（Function Calling），改写稿原样引用 → 不许判成编造",
+      "draft": "负责企业知识库建设；熟练使用 Function Calling 接入订单与库存工具。",
+      "expect_passed": true,
+      "expect_missed_contains": []
+    },
+    {
+      "id": "pv-012",
+      "desc": "回归反向：简历里没有的技术名词 + 能力断言 → 仍然必须拦（不许因为放宽同义词而漏放）",
+      "draft": "负责企业知识库建设；熟练使用 Kafka 做消息队列。",
+      "expect_passed": false,
+      "expect_missed_contains": ["Kafka"]
+    }
+  ],
+  "path_cases": [
+    {
+      "id": "pv-path-001",
+      "desc": "只读母版 guard：改写稿输出路径指向 resume.md → 必须抛错",
+      "draft_path": "data/profile/resume.md",
+      "expect_error": "改写稿输出路径指向只读母版"
+    },
+    {
+      "id": "pv-path-002",
+      "desc": "正常输出路径（output/<jd_id>/resume.md）→ 不抛错",
+      "draft_path": "output/jd-026/resume.md",
+      "expect_error": null
+    }
+  ]
+}

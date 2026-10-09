@@ -1,0 +1,45 @@
+{
+  "unit": "approval",
+  "note": "产物扫描是纯代码；三道关需要数据库与图状态，放在 tests/ 的集成用例里测。",
+  "cases": [
+    {
+      "id": "ap-001",
+      "desc": "成稿里出现 pending → 不许标成可投递",
+      "text": "# 定制简历\n待审批状态 pending\n",
+      "expect_forbidden": ["pending"]
+    },
+    {
+      "id": "ap-002",
+      "desc": "成稿里出现【待补】占位符 → 拦",
+      "text": "项目经历：【待补 量化结果】\n",
+      "expect_forbidden": ["【待补", "待补"]
+    },
+    {
+      "id": "ap-003",
+      "desc": "溯源未通过标记泄漏到成稿 → 拦",
+      "text": "本稿 verify_failed，请人工复核。\n",
+      "expect_forbidden": ["verify_failed"]
+    },
+    {
+      "id": "ap-004",
+      "desc": "干净的成稿 → 通过",
+      "text": "# 杨健 · AI Agent 开发工程师\n\n## 项目经历\n\n- 负责企业知识库检索链路。\n",
+      "expect_forbidden": []
+    },
+    {
+      "id": "ap-005",
+      "desc": "TODO 未被清理 → 拦",
+      "text": "技能栈：TODO 待整理\n",
+      "expect_forbidden": ["TODO"]
+    }
+  ],
+  "gate_semantics": {
+    "note": "三道关的语义定义（集成测试在 tests/test_flow.py）",
+    "rules": [
+      {"order": 1, "check": "待办表里存在该 ticket_id", "fail_code": 404},
+      {"order": 2, "check": "会话真的挂在挂起态（图状态 next 非空）", "fail_code": 409},
+      {"order": 3, "check": "ticket.thread_id == 请求的 thread_id", "fail_code": 409}
+    ],
+    "why_order_matters": "第 2 关最关键：往一个其实不在挂起态的会话传普通输入，中断状态会静默丢失（next 变空、__interrupt__ 消失、不报错）。所以不能只看待办表。"
+  }
+}

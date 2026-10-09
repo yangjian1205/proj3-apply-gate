@@ -1,0 +1,17 @@
+{
+  "unit": "match-score",
+  "note": "五态→三分类的映射是代码常量（core/config.py: STAGE_TO_VERDICT），不经过模型，所以这部分可以在离线用例里断言。模型侧的行为指标在 eval/run.py 里测。",
+  "mapping_cases": [
+    {"stage_5": "已匹配", "expect_verdict": "apply", "why": "硬门槛全过且有证据 → 该投"},
+    {"stage_5": "表达缺口", "expect_verdict": "borderline", "why": "不拦你，但也不建议直接投 —— 先补简历那一句"},
+    {"stage_5": "证据不足", "expect_verdict": "borderline", "why": "交人工，并附「缺什么证据」清单"},
+    {"stage_5": "真实缺口", "expect_verdict": "reject", "why": "事实明确不满足，能引用 JD 原句"},
+    {"stage_5": "待确认", "expect_verdict": "borderline", "why": "缺决定性信息 → 不许猜"}
+  ],
+  "invariants": [
+    {"id": "ms-inv-001", "desc": "五态必须恰好 5 个，且每个都能映射到三分类之一"},
+    {"id": "ms-inv-002", "desc": "硬门槛闸判 reject 时，最终三分类必须是 reject，模型无权推翻"},
+    {"id": "ms-inv-003", "desc": "分项分必须夹在 0—10 之间，越界要记告警而不是静默接受"},
+    {"id": "ms-inv-004", "desc": "模型输出不合 schema 时降级为「待确认」，不许猜一个分类"}
+  ]
+}

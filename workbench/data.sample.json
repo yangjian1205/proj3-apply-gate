@@ -1,0 +1,172 @@
+{
+  "generated_at": "2026-10-04 14:40",
+  "source": {
+    "db": "data/audit.db",
+    "rules_version": "42 条规则 / v1",
+    "records": 3
+  },
+  "stats": { "total": 3, "apply": 1, "reject": 1, "borderline": 1, "pending": 1, "cost": 0.183 },
+  "records": [
+    {
+      "jd_id": "jd_007",
+      "company": "某科技",
+      "title": "AI Agent 开发工程师",
+      "city": "上海",
+      "fetched_at": "2026-10-04",
+      "stale": false,
+      "verdict": "reject",
+      "verdict_5": "真实缺口",
+      "hard_flags": [
+        { "rule_id": "no_sponsorship", "quote": "本岗位不提供工作签证支持" }
+      ],
+      "score": { "relevant": 8, "level": 4, "skill": 6 },
+      "reasons": [
+        "命中一档硬门槛 no_sponsorship：JD 明写不提供签证，属客观事实冲突，纯代码拦下",
+        "年限差 1.5 年（你 1.5 年 / 要求 3 年）：属二档阈值硬，差 1-2 年只提示、不拦"
+      ],
+      "jd_text": "岗位要求：3 年及以上 AI 应用开发经验；熟悉 LangGraph、RAG 检索链路，能独立完成检索链路搭建；base 上海，需接受短期出差。本岗位不提供工作签证支持。",
+      "draft_path": null,
+      "resume_base": [],
+      "draft_lines": [],
+      "evidence_map": [],
+      "missed": [],
+      "rewrite_round": 0,
+      "cost": 0.041,
+      "elapsed": 6.2,
+      "ticket_id": null,
+      "approval_status": "not_needed",
+      "audit": [
+        { "ts": "14:39:58", "from": "intake", "to": "hard_gate", "note": "JD 归一化完成，共 3 条硬条件" },
+        { "ts": "14:39:58", "from": "hard_gate", "to": "end", "note": "命中 no_sponsorship → reject，不进入改写" }
+      ]
+    },
+    {
+      "jd_id": "jd_012",
+      "company": "某智能",
+      "title": "AI 应用工程师",
+      "city": "杭州",
+      "fetched_at": "2026-09-20",
+      "stale": true,
+      "verdict": "borderline",
+      "verdict_5": "表达缺口",
+      "hard_flags": [],
+      "score": { "relevant": 8, "level": 5, "skill": 4 },
+      "reasons": [
+        "硬门槛全过",
+        "JD 要求 RAG；你的简历「个人职责」里写了向量 + BM25 双路召回，但技能栏没有 RAG",
+        "判定为「表达缺口」而非「真实缺口」：你做过这件事，只是简历没写清",
+        "建议：把 RAG / Chroma / BM25 补进技能栏（这句话你自己写，系统不代笔）"
+      ],
+      "jd_text": "岗位职责：负责企业知识库 RAG 检索链路建设，熟悉向量库与关键词检索的融合排序；要求本科及以上学历，沟通表达清晰。",
+      "draft_path": null,
+      "resume_base": [],
+      "draft_lines": [],
+      "evidence_map": [],
+      "missed": [],
+      "rewrite_round": 0,
+      "cost": 0.038,
+      "elapsed": 5.4,
+      "ticket_id": null,
+      "approval_status": "not_needed",
+      "audit": [
+        { "ts": "14:40:03", "from": "intake", "to": "hard_gate", "note": "JD 归一化完成，无硬命中" },
+        { "ts": "14:40:03", "from": "hard_gate", "to": "match_score", "note": "pass，进入软条件判定" },
+        { "ts": "14:40:08", "from": "match_score", "to": "end", "note": "五态=表达缺口 → 输出补写建议，不改稿" }
+      ]
+    },
+    {
+      "jd_id": "jd_023",
+      "company": "某数据",
+      "title": "LLM 应用开发工程师",
+      "city": "远程",
+      "fetched_at": "2026-10-03",
+      "stale": false,
+      "verdict": "apply",
+      "verdict_5": "已匹配",
+      "hard_flags": [],
+      "score": { "relevant": 9, "level": 6, "skill": 8 },
+      "reasons": [
+        "硬门槛全过；软条件命中 4/5",
+        "定制稿已生成，溯源校验通过（重写 1 轮）",
+        "等待人工审批，未点头前不给「可投递」状态"
+      ],
+      "jd_text": "岗位职责：基于 LangGraph 构建业务流程 Agent，接入工具调用与人工审批环节；负责 FastAPI 服务化封装与多轮会话记忆；接受远程办公。",
+      "draft_path": "drafts/jd_023.md",
+      "resume_base": [
+        { "n": 1, "text": "工作经历 · 上海燊醒人工智能科技有限公司 · LLM 算法工程师 · 2026.01 — 2026.07" },
+        { "n": 2, "text": "搭建 LLM 在线推理接口，用 FastAPI 封装对话服务，支持流式输出与并发，超时与失败做重试兜底。" },
+        { "n": 3, "text": "用 LangGraph 状态机建模业务流程，Function Calling 接入订单、库存工具，退款、改地址等敏感操作挂起转人工审批。" },
+        { "n": 4, "text": "围绕真实业务问题搭建评测集并写成评估脚本，每次改动跑回归，防止效果退化。" },
+        { "n": 5, "text": "项目经历 · 智能客服 Agent（含人工审批）：用 SQLite checkpointer 实现多轮对话记忆与跨会话恢复。" }
+      ],
+      "draft_lines": [
+        {
+          "n": 1,
+          "text": "项目经历 · 智能客服 Agent（含人工审批）｜ LangGraph 状态机 · 高危人审 · 会话恢复",
+          "atoms": []
+        },
+        {
+          "n": 2,
+          "text": "基于 LangGraph 状态机建模业务流程，Function Calling 接入订单、库存工具；退款、改地址等敏感操作在工具执行前通过 interrupt 挂起，人工审批通过后才继续执行。",
+          "atoms": [
+            { "atom": "LangGraph", "type": "B", "found": true, "where": "原简历 第 3 行" },
+            { "atom": "Function Calling", "type": "B", "found": true, "where": "原简历 第 3 行" },
+            { "atom": "interrupt", "type": "B", "found": true, "where": "原简历 第 3 行（“挂起转人工审批”）" }
+          ]
+        },
+        {
+          "n": 3,
+          "text": "用 SQLite checkpointer 实现多轮对话记忆与跨会话恢复，服务重启后历史会话可还原。",
+          "atoms": [
+            { "atom": "SQLite checkpointer", "type": "B", "found": true, "where": "原简历 第 5 行" },
+            { "atom": "服务重启后可还原", "type": "C", "found": true, "where": "原简历 第 5 行（跨会话恢复）" }
+          ]
+        },
+        {
+          "n": 4,
+          "text": "用 FastAPI 封装 /chat 与 /approvals 接口，支持流式输出与并发，超时与失败做重试兜底。",
+          "atoms": [
+            { "atom": "FastAPI", "type": "B", "found": true, "where": "原简历 第 2 行" },
+            { "atom": "流式输出与并发", "type": "B", "found": true, "where": "原简历 第 2 行" },
+            { "atom": "/approvals", "type": "A", "found": true, "where": "原简历 第 3 行（人工审批）" }
+          ]
+        },
+        {
+          "n": 5,
+          "text": "该服务已上线生产环境，支撑日均 300 次调用，线上稳定运行 6 个月。",
+          "atoms": [
+            { "atom": "已上线生产环境", "type": "C", "found": false, "where": null },
+            { "atom": "日均 300 次", "type": "A", "found": false, "where": null },
+            { "atom": "6 个月", "type": "A", "found": false, "where": null }
+          ]
+        }
+      ],
+      "evidence_map": [
+        { "atom": "LangGraph", "type": "B", "found": true, "where": "原简历 第 3 行" },
+        { "atom": "Function Calling", "type": "B", "found": true, "where": "原简历 第 3 行" },
+        { "atom": "interrupt", "type": "B", "found": true, "where": "原简历 第 3 行" },
+        { "atom": "SQLite checkpointer", "type": "B", "found": true, "where": "原简历 第 5 行" },
+        { "atom": "FastAPI", "type": "B", "found": true, "where": "原简历 第 2 行" },
+        { "atom": "已上线生产环境", "type": "C", "found": false, "where": null },
+        { "atom": "日均 300 次", "type": "A", "found": false, "where": null },
+        { "atom": "6 个月", "type": "A", "found": false, "where": null }
+      ],
+      "missed": ["已上线生产环境", "日均 300 次", "6 个月"],
+      "rewrite_round": 1,
+      "cost": 0.104,
+      "elapsed": 18.4,
+      "ticket_id": "T-2026-0007",
+      "approval_status": "pending",
+      "audit": [
+        { "ts": "14:40:12", "from": "intake", "to": "hard_gate", "note": "JD 归一化完成，无硬命中" },
+        { "ts": "14:40:12", "from": "hard_gate", "to": "match_score", "note": "pass（42 条规则全跑）" },
+        { "ts": "14:40:16", "from": "match_score", "to": "tailor", "note": "五态=已匹配，分项 9/6/8" },
+        { "ts": "14:40:24", "from": "tailor", "to": "provenance", "note": "草稿完成，抽原子 8 个" },
+        { "ts": "14:40:25", "from": "provenance", "to": "tailor", "note": "A/C 类命中 5/8，missed：已上线生产环境、日均 300 次、6 个月 → 回退重写" },
+        { "ts": "14:40:30", "from": "tailor", "to": "provenance", "note": "第 2 轮：三处无出处表述已删除" },
+        { "ts": "14:40:30", "from": "provenance", "to": "cost", "note": "passed=true，重写 1 轮" },
+        { "ts": "14:40:30", "from": "cost", "to": "approval", "note": "本次 ¥0.104 / 18.4s，挂起等审批" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "unit": "hard-gate",
+  "note": "只跑本单元的确定性判定，不调模型、不花钱。改规则词表后先跑这个，再跑 scripts/gate.py 的全量门禁。",
+  "profile": {
+    "expected_cities": ["广州"],
+    "accept_remote": true,
+    "accept_relocate": false,
+    "need_sponsorship": false,
+    "highest_degree": "本科",
+    "degree_level": 2,
+    "is_fresh_graduate": false,
+    "years_experience": 1.0,
+    "certificates": ["华为 HCIP-AI-EI（备考中）"],
+    "language_certs": []
+  },
+  "cases": [
+    {
+      "id": "hg-001",
+      "desc": "签证冲突：JD 明写不提供工作签证",
+      "jd_text": "岗位职责：负责 AI 应用开发。任职要求：本科及以上学历；公司不提供工作签证支持，敬请知悉。",
+      "expect_flags": ["no_sponsorship"],
+      "expect_quote_contains": "不提供工作签证"
+    },
+    {
+      "id": "hg-002",
+      "desc": "签证无冲突：JD 写明协助办理",
+      "jd_text": "任职要求：本科及以上；公司可协助办理工作签证。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-003",
+      "desc": "坐班城市冲突：base 北京，期望广州",
+      "jd_text": "任职要求：本科及以上；base 北京，需全职坐班，不支持远程办公。",
+      "expect_flags": ["onsite_only"],
+      "expect_quote_contains": "坐班"
+    },
+    {
+      "id": "hg-004",
+      "desc": "坐班但城市一致：base 广州，不触发",
+      "jd_text": "任职要求：本科及以上；base 广州，需全职坐班，不支持远程办公。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-005",
+      "desc": "明确支持远程：即使城市不同也不触发",
+      "jd_text": "任职要求：本科及以上；base 北京，支持远程办公。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-006",
+      "desc": "没说城市 → 信息不足，不触发（交给 borderline，不许猜）",
+      "jd_text": "任职要求：本科及以上；需全职坐班，不支持远程办公。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-007",
+      "desc": "学历门槛：硕士及以上，本科不满足",
+      "jd_text": "任职要求：硕士研究生及以上学历，计算机相关专业。",
+      "expect_flags": ["degree_master_plus"],
+      "expect_quote_contains": "硕士"
+    },
+    {
+      "id": "hg-008",
+      "desc": "写『硕士优先』不算硬门槛 —— 这是最容易误杀的一类",
+      "jd_text": "任职要求：本科及以上学历，硕士优先。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-009",
+      "desc": "证书：必须持有，且候选人没有",
+      "jd_text": "任职要求：必须持有 PMP 证书，未持证者请勿投递。",
+      "expect_flags": ["required_certificate"],
+      "expect_quote_contains": "PMP"
+    },
+    {
+      "id": "hg-010",
+      "desc": "证书：写『优先』不算硬门槛（即使该句外别处出现『优先』也不许误排）",
+      "jd_text": "任职要求：须持有 PMP 证书者优先；有项目管理经验者优先。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-011",
+      "desc": "应届专属：仅面向 20XX 届应届生",
+      "jd_text": "任职要求：仅面向 2027 届应届毕业生，需提供在校证明。",
+      "expect_flags": ["fresh_grad_only"],
+      "expect_quote_contains": "应届"
+    },
+    {
+      "id": "hg-012",
+      "desc": "语言：要求英语六级且候选人无语言证书",
+      "jd_text": "任职要求：大学英语六级 550 分以上，能作为工作语言使用。",
+      "expect_flags": ["language_required"],
+      "expect_quote_contains": "六级"
+    },
+    {
+      "id": "hg-013",
+      "desc": "年限差 3 年以上 → 拒",
+      "jd_text": "任职要求：本科及以上；具备 5 年以上工作经验。",
+      "expect_flags": ["years_gap_reject"],
+      "expect_quote_contains": "5 年"
+    },
+    {
+      "id": "hg-014",
+      "desc": "年限差 1—2 年 → 只提示不拒（防误杀转行者，这条最要紧）",
+      "jd_text": "任职要求：本科及以上；3 年以上开发经验，能力突出者可放宽。",
+      "expect_flags": [],
+      "expect_hints": ["years_gap_hint"],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-015",
+      "desc": "职级措辞不该拦人：写『资深』不产生任何拦截",
+      "jd_text": "任职要求：资深 AI 应用工程师，本科及以上学历，熟悉 Python。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-016",
+      "desc": "技能缺口不该拦人：写 Kafka 不产生硬拦截",
+      "jd_text": "任职要求：本科及以上；精通 Kafka、Spark 与 Kubernetes。",
+      "expect_flags": [],
+      "expect_quote_contains": null
+    },
+    {
+      "id": "hg-017",
+      "desc": "否定词不能被当成排除词：『不提供工作签证支持』不许被『提供工作签证支持』排除掉",
+      "jd_text": "本岗位工作地点为新加坡，需全职在新加坡办公，公司不提供工作签证支持。",
+      "expect_flags": ["no_sponsorship"],
+      "expect_quote_contains": "不提供工作签证支持"
+    },
+    {
+      "id": "hg-018",
+      "desc": "多条同时命中：坐班 + 签证",
+      "jd_text": "任职要求：base 上海，需全职坐班，不支持远程办公；公司不提供工作签证支持。",
+      "expect_flags": ["onsite_only", "no_sponsorship"],
+      "expect_quote_contains": null
+    }
+  ]
+}

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>proj3 工作台 · 投递决策闸门</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --ink:#1e293b; --sub:#64748b; --line:#e2e8f0;
+    --blue:#2563eb; --blue-bg:#eff6ff; --teal:#0d9488; --teal-bg:#f0fdfa;
+    --amber:#b45309; --amber-bg:#fffbeb; --red:#dc2626; --red-bg:#fef2f2;
+    --indigo:#4f46e5; --indigo-bg:#eef2ff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; font-size:14px; line-height:1.7;}
+  .wrap{max-width:1240px; margin:0 auto; padding:20px 18px 60px;}
+
+  .hero{background:linear-gradient(135deg,#0f172a,#1e3a8a 55%,#0d9488); color:#fff; border-radius:14px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .hero h1{font-size:19px;}
+  .hero .meta{font-size:12px; opacity:.88; margin-top:3px;}
+  .hero-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  button{font-family:inherit; font-size:13px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:8px; padding:6px 13px; cursor:pointer;}
+  button:hover{border-color:#94a3b8;}
+  button.primary{background:var(--blue); border-color:var(--blue); color:#fff;}
+  button.ghost{background:transparent; border-color:rgba(255,255,255,.5); color:#fff;}
+  button.danger{background:var(--red); border-color:var(--red); color:#fff;}
+  button:disabled{opacity:.55; cursor:default;}
+
+  .stats{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin:14px 0;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 14px;}
+  .stat-value{font-size:21px; font-weight:700; line-height:1.25;}
+  .stat-label{font-size:12px; color:var(--sub);}
+  .stat.apply .stat-value{color:var(--teal);} .stat.reject .stat-value{color:var(--red);}
+  .stat.border .stat-value{color:var(--amber);} .stat.pending .stat-value{color:var(--indigo);}
+
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px;}
+  .panel-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;}
+  .panel-title{font-weight:700;}
+  .panel-hint{font-size:12px; color:var(--sub);}
+  .filters{display:flex; gap:6px; flex-wrap:wrap;}
+  .chip{border:1px solid var(--line); background:#fff; border-radius:999px; padding:3px 12px; font-size:12.5px; cursor:pointer;}
+  .chip.on{background:var(--indigo-bg); border-color:#c7d2fe; color:var(--indigo); font-weight:700;}
+  input[type=search]{border:1px solid var(--line); border-radius:8px; padding:5px 11px; font-size:13px; font-family:inherit; min-width:180px;}
+
+  .grid{display:grid; grid-template-columns:330px minmax(0,1fr); gap:14px; margin-top:14px; align-items:start;}
+  .row{display:flex; align-items:center; gap:8px; padding:9px 10px; border-radius:9px; cursor:pointer; border:1px solid transparent;}
+  .row:hover{background:#f8fafc;}
+  .row.on{background:var(--blue-bg); border-color:#bfdbfe;}
+  .row .who{flex:1; min-width:0;}
+  .row .company{font-weight:600; font-size:13.5px;}
+  .row .position{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .badge{font-size:11.5px; font-weight:700; border-radius:999px; padding:1px 9px; white-space:nowrap;}
+  .badge.apply{background:var(--teal-bg); color:var(--teal);}
+  .badge.reject{background:var(--red-bg); color:var(--red);}
+  .badge.borderline{background:var(--amber-bg); color:var(--amber);}
+  .badge.pending{background:var(--indigo-bg); color:var(--indigo);}
+  .empty{padding:26px 12px; text-align:center; color:var(--sub); font-size:13px;}
+
+  .tabs{display:flex; gap:4px; border-bottom:1px solid var(--line); margin:8px 0 12px;}
+  .tab{border:0; background:transparent; border-bottom:2px solid transparent; border-radius:0; padding:6px 12px; font-size:13px; color:var(--sub);}
+  .tab.on{color:var(--blue); border-bottom-color:var(--blue); font-weight:700;}
+  .tab .n{font-size:11px; background:var(--red); color:#fff; border-radius:999px; padding:0 6px; margin-left:5px;}
+
+  h3.blk{font-size:13.5px; margin:14px 0 6px; color:var(--indigo);}
+  .quote-box{background:#f8fafc; border:1px solid var(--line); border-left:3px solid var(--red); border-radius:0 8px 8px 0; padding:10px 13px; font-size:13px; line-height:1.95;}
+  .quote-box.ok{border-left-color:var(--teal);}
+  mark{background:#fde68a; padding:0 2px; border-radius:3px; font-weight:600;}
+  .kv{display:flex; gap:8px; font-size:13px; margin:3px 0;}
+  .kv b{flex:0 0 88px; color:var(--sub); font-weight:600;}
+  ul.reasons{margin-left:18px; font-size:13px;}
+  .bar{height:6px; background:#eef2f7; border-radius:99px; overflow:hidden; flex:1; margin-top:7px;}
+  .bar > i{display:block; height:100%; background:var(--blue);}
+
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .col-head{font-size:12.5px; font-weight:700; color:var(--sub); margin-bottom:6px;}
+  .line{padding:5px 9px; border-radius:7px; font-size:12.5px; line-height:1.85; margin-bottom:4px; border:1px solid transparent;}
+  .line .no{color:#94a3b8; font-size:11px; margin-right:5px;}
+  .line.hit{background:#fffbeb; border-color:#fde68a;}
+  .line.bad{background:var(--red-bg); border-color:#fecaca;}
+  .line.flash{animation:flash 1.1s ease;}
+  @keyframes flash{0%{background:#bfdbfe;} 100%{background:transparent;}}
+  .atom{display:inline-block; border-bottom:1px dashed #2563eb; cursor:pointer;}
+  .atom.bad{color:var(--red); border-bottom-color:var(--red); font-weight:600;}
+  .atom:hover{background:#dbeafe;}
+
+  .gate{display:flex; gap:14px; flex-wrap:wrap; font-size:13px; margin:8px 0;}
+  .timeline{font-size:12.5px; margin-top:6px;}
+  .tl-item{display:grid; grid-template-columns:70px 150px minmax(0,1fr); gap:8px; padding:5px 0; border-bottom:1px dashed var(--line);}
+  .tl-item span:first-child{color:var(--sub); font-variant-numeric:tabular-nums;}
+  .tl-item .flowto{font-weight:600;}
+  .note{background:var(--amber-bg); border:1px solid #fde68a; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  .err{background:var(--red-bg); border:1px solid #fecaca; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  .okbox{background:var(--teal-bg); border:1px solid #99f6e4; border-radius:8px; padding:9px 13px; font-size:12.5px; margin-top:10px;}
+  /* 「怎么改简历」视图 —— 与 webapp/index.html 的 .map-* 保持同款 */
+  .map-item{border:1px solid var(--line); border-left:3px solid var(--line); border-radius:0 8px 8px 0; padding:10px 13px; margin:9px 0; background:#fff;}
+  .map-item.gap{border-left-color:var(--red); background:var(--red-bg);}
+  .map-item.improve{border-left-color:var(--amber); background:var(--amber-bg);}
+  .map-item.done{border-left-color:var(--teal);}
+  .map-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; font-size:13.5px;}
+  .map-idx{flex:0 0 20px; height:20px; line-height:20px; text-align:center; border-radius:5px; background:#e2e8f0; color:var(--sub); font-size:11px;}
+  .map-badge{margin-left:auto; font-size:11px; padding:2px 9px; border-radius:20px; font-weight:600; white-space:nowrap;}
+  .map-badge.done{background:var(--teal-bg); color:var(--teal); border:1px solid #99f6e4;}
+  .map-badge.improve{background:var(--amber-bg); color:var(--amber); border:1px solid #fde68a;}
+  .map-badge.gap{background:var(--red-bg); color:var(--red); border:1px solid #fecaca;}
+  .map-row{display:flex; gap:8px; font-size:12.8px; margin:3px 0; line-height:1.8;}
+  .map-k{flex:0 0 62px; color:var(--sub); font-weight:600;}
+  .map-row.sug{background:rgba(255,255,255,.75); border-radius:6px; padding:5px 9px; margin-top:5px;}
+  .map-note{font-size:11.5px; color:var(--amber); margin-top:5px;}
+  .footer{color:var(--sub); font-size:12px; text-align:center; margin-top:26px;}
+
+  @media print{
+    body{background:#fff;}
+    .hero-actions, .filters, input[type=search], .row{break-inside:avoid;}
+    .hero{background:#0f172a !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .tabs{display:none;}
+    .tabpane{display:block !important;}
+    .footer{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div>
+      <h1>proj3 工作台 · 投递决策闸门</h1>
+      <div class="meta" id="heroMeta">数据截至 ——</div>
+    </div>
+    <div class="hero-actions">
+      <button class="ghost" id="btnCsv">导出 CSV</button>
+      <button class="ghost" id="btnJson">导出 JSON</button>
+      <button class="ghost" id="btnReload">重新加载</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">JD 列表 <span class="panel-hint" id="listHint"></span></div>
+      <div class="filters" id="filters"></div>
+      <input type="search" id="q" placeholder="搜公司 / 岗位 / jd_id">
+    </div>
+    <div class="grid">
+      <div id="list"></div>
+      <div id="detail" class="panel" style="border:1px solid var(--line)"></div>
+    </div>
+  </div>
+
+  <div class="footer">proj3 工作台 · 单文件零依赖 · 后端快照通过 data.json 注入</div>
+</div>
+
+<!-- ============================================================
+     数据：默认内嵌示例快照；构建脚本会把这段整体替换成真实 data.json
+     替换规则见 scripts/build_workbench.py
+     ============================================================ -->
+<script id="data-json" type="application/json">
+{"__SAMPLE_SNAPSHOT__": true}
+</script>
+
+<script>
+/* ============================================================
+   0) 载入数据：直接从内嵌 JSON 解析，不需要任何后端
+   ============================================================ */
+const DATA = JSON.parse(document.getElementById("data-json").textContent);
+
+const VERDICT_TEXT = { apply: "该投", reject: "不该投", borderline: "边界" };
+const VERDICT_CLASS = { apply: "apply", reject: "reject", borderline: "borderline" };
+const APPROVAL_TEXT = { not_needed: "无需审批", pending: "待审批", approved: "已批准", rejected: "已拒绝" };
+const FILTERS = [
+  { key: "all", label: "全部" },
+  { key: "apply", label: "该投" },
+  { key: "reject", label: "不该投" },
+  { key: "borderline", label: "边界" },
+  { key: "pending", label: "待审批" }
+];
+
+const state = { filter: "all", q: "", selected: null, tab: "judge" };
+state.selected = (DATA.records[0] || {}).jd_id || null;
+
+/* ============================================================
+   1) 纯函数：filter → sort → render
+   ============================================================ */
+function pick() {
+  const kw = state.q.trim().toLowerCase();
+  const rows = DATA.records.filter((r) => {
+    if (state.filter === "pending") { if (r.approval_status !== "pending") return false; }
+    else if (state.filter !== "all") { if (r.verdict !== state.filter) return false; }
+    if (!kw) return true;
+    return (r.company + r.title + r.jd_id).toLowerCase().includes(kw);
+  });
+  const rank = (r) => (r.approval_status === "pending" ? 0 : r.verdict === "reject" ? 1 : 2);
+  return rows.sort((a, b) => rank(a) - rank(b) || a.jd_id.localeCompare(b.jd_id));
+}
+
+/* 高亮：把硬门槛命中的 JD 原句标黄 */
+function highlight(text, quotes) {
+  let out = text || "";
+  (quotes || []).forEach((q) => { if (q && out.includes(q)) out = out.replaceAll(q, "<mark>" + q + "</mark>"); });
+  return out;
+}
+
+function esc(s) {
+  return String(s == null ? "" : s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function renderStats() {
+  const s = DATA.stats || {};
+  const cells = [
+    { v: s.total, l: "JD 总数", c: "" },
+    { v: s.apply, l: "该投", c: "apply" },
+    { v: s.reject, l: "不该投", c: "reject" },
+    { v: s.borderline, l: "边界", c: "border" },
+    { v: s.pending, l: "待审批", c: "pending" },
+    { v: "¥" + Number(s.cost || 0).toFixed(3), l: "累计成本", c: "" }
+  ];
+  document.getElementById("stats").innerHTML = cells.map((c) =>
+    '<div class="stat ' + c.c + '"><div class="stat-value">' + c.v + '</div><div class="stat-label">' + c.l + '</div></div>'
+  ).join("");
+  const src = DATA.source || {};
+  document.getElementById("heroMeta").textContent =
+    "数据截至 " + DATA.generated_at + "　·　来源 " + (src.db || "-") + "　·　" + (src.rules_version || "");
+}
+
+function renderFilters() {
+  document.getElementById("filters").innerHTML = FILTERS.map((f) =>
+    '<button class="chip ' + (state.filter === f.key ? "on" : "") + '" data-filter="' + f.key + '">' + f.label + '</button>'
+  ).join("");
+}
+
+function renderList() {
+  const rows = pick();
+  document.getElementById("listHint").textContent = "（" + rows.length + " / " + DATA.records.length + "）";
+  const box = document.getElementById("list");
+  if (!rows.length) { box.innerHTML = '<div class="empty">没有匹配的记录</div>'; return; }
+  box.innerHTML = rows.map((r) =>
+    '<div class="row ' + (r.jd_id === state.selected ? "on" : "") + '" data-id="' + r.jd_id + '">' +
+      '<div class="who"><div class="company">' + esc(r.company) + '</div>' +
+      '<div class="position">' + esc(r.jd_id + " · " + r.title) + '</div></div>' +
+      (r.approval_status === "pending" ? '<span class="badge pending">待审批</span>' : "") +
+      '<span class="badge ' + VERDICT_CLASS[r.verdict] + '">' + VERDICT_TEXT[r.verdict] + '</span>' +
+    '</div>'
+  ).join("");
+}
+
+/* ---------- 视图 3：判定详情 ---------- */
+function paneJudge(r) {
+  const quotes = (r.hard_flags || []).map((f) => f.quote);
+  const flags = (r.hard_flags || []).length
+    ? r.hard_flags.map((f) => '<li><b>' + esc(f.rule_id) + '</b>　依据原文：<mark>' + esc(f.quote) + '</mark></li>').join("")
+    : '<li>无命中 —— 硬门槛全过（42 条规则全跑）</li>';
+  const sc = r.score || {};
+  const bar = (label, v) =>
+    '<div class="kv"><b>' + label + '</b><span style="flex:1">' + v + ' / 10</span></div>' +
+    '<div class="bar"><i style="width:' + (v * 10) + '%"></i></div>';
+  return '' +
+    '<h3 class="blk">硬门槛命中</h3>' +
+    '<ul class="reasons">' + flags + '</ul>' +
+    '<h3 class="blk">JD 原文（命中处高亮）</h3>' +
+    '<div class="quote-box ' + (quotes.length ? "" : "ok") + '">' + highlight(esc(r.jd_text), quotes) + '</div>' +
+    '<h3 class="blk">分项打分</h3>' + bar("相关度", sc.relevant || 0) + bar("职级", sc.level || 0) + bar("技能覆盖", sc.skill || 0) +
+    '<h3 class="blk">判定理由</h3>' +
+    '<ul class="reasons">' + (r.reasons || []).map((x) => "<li>" + esc(x) + "</li>").join("") + '</ul>' +
+    '<h3 class="blk">成本与耗时</h3>' +
+    '<div class="kv"><b>本次成本</b><span>¥' + Number(r.cost || 0).toFixed(3) + '</span></div>' +
+    '<div class="kv"><b>耗时</b><span>' + r.elapsed + ' 秒</span></div>' +
+    '<div class="kv"><b>重写轮数</b><span>' + r.rewrite_round + ' / 3</span></div>';
+}
+
+/* ---------- 视图 4：溯源对比 ---------- */
+function paneCompare(r) {
+  if (!(r.draft_lines || []).length) {
+    return '<div class="empty">本行没有改写稿（不该投不改稿 / 边界只给建议）</div>';
+  }
+  const left = (r.resume_base || []).map((l) =>
+    '<div class="line" id="base-' + l.n + '" data-n="' + l.n + '"><span class="no">' + l.n + '</span>' + esc(l.text) + '</div>'
+  ).join("");
+  const right = r.draft_lines.map((l) => {
+    let text = esc(l.text);
+    let cls = "line";
+    (l.atoms || []).forEach((a) => {
+      const label = esc(a.atom);
+      const where = a.where ? esc(a.where) : "原简历无此文";
+      const tag = '<span class="atom ' + (a.found ? "" : "bad") + '" title="' + (a.found ? "出处：" : "未找到出处：") + where +
+                  '" data-jump="' + (a.found && a.where ? (a.where.match(/第 (\d+) 行/) ? RegExp.$1 : "") : "") + '">' + label + '</span>';
+      if (text.includes(label)) text = text.replaceAll(label, tag);
+      if (!a.found) cls = "line bad";
+    });
+    return '<div class="' + cls + '"><span class="no">' + l.n + '</span>' + text + '</div>';
+  }).join("");
+  const missed = (r.missed || []).length
+    ? '<div class="err"><b>未找到出处的 ' + r.missed.length + ' 项：</b>' + esc(r.missed.join("、")) +
+      '　→ 已回退重写 ' + r.rewrite_round + ' 轮' + (r.rewrite_round >= 3 ? '，<b>超过上限，本稿不予放行</b>' : "") + '</div>'
+    : '<div class="okbox">全部事实原子都能在原简历找到出处 —— <b>passed = true</b></div>';
+  return '' +
+    '<div class="panel-hint">左：原简历（<b>只读</b>，resume_base 不可变）；右：改写稿。<b>点右侧带下划线的词 → 跳到左侧对应行</b>；标红 = 原简历里找不到。</div>' +
+    '<div class="compare" style="margin-top:10px">' +
+      '<div><div class="col-head">原简历</div>' + left + '</div>' +
+      '<div><div class="col-head">改写稿</div>' + right + '</div>' +
+    '</div>' + missed;
+}
+
+/* ---------- 视图 2：怎么改简历 ---------- */
+/* ⚠️ 本视图与 webapp/index.html 的 paneGuide 是同一份逻辑的两处实现。
+   改一边必须改另一边 —— 否则离线看板与网页工作台会给出不一样的处方。
+   页面版改动时请回来同步这里。 */
+function paneGuide(r) {
+  const mp = r.jd_mapping || [];
+  if (!mp.length) {
+    return '<div class="empty">这条没有逐条处方。<br><br>' +
+      '「不该投」和「边界」的岗位本来就不进改写环节 —— 没有稿子要改，自然没有「怎么改」。<br>' +
+      '想知道差在哪，切到「判定详情」看<b>判定理由</b>与<b>缺什么信息</b>。</div>';
+  }
+  const order = { "可强化": 0, "已覆盖": 1, "真实缺口": 2 };
+  const sorted = mp.slice().sort((a, b) => order[a.status] - order[b.status]);
+  const gaps = mp.filter((x) => x.status === "真实缺口");
+
+  let h = '<div class="panel-hint">把这份 JD 一条条拆开对照：<b>它要什么 → 你简历里有什么 → 该怎么改</b>。' +
+    '每条建议里的数字、年限、公司名、技术名都过了代码核对 —— 核不上的一律按「真实缺口」处理，不教你编。</div>';
+  if (gaps.length) {
+    h += '<div class="err">⚠️ <b>' + gaps.length + ' 条真实缺口 —— 这几条别编。</b><br>' +
+      '缺口不会因为改措辞而消失。只有两条路：去做一个真的项目，或者面试时如实说明。</div>';
+  }
+  h += '<h3 class="blk">逐条对照（共 ' + mp.length + ' 条 · 该强化的排在前面）</h3>';
+  sorted.forEach((x, i) => {
+    const cls = x.status === "真实缺口" ? "gap" : x.status === "可强化" ? "improve" : "done";
+    h += '<div class="map-item ' + cls + '">' +
+      '<div class="map-head"><span class="map-idx">' + (i + 1) + '</span><b>' + esc(x.jd_requirement) + '</b>' +
+      '<span class="map-badge ' + cls + '">' + esc(x.status) + '</span></div>' +
+      '<div class="map-row"><span class="map-k">JD 原句</span><span>' + esc(x.jd_quote) +
+      (x.quote_verified ? "" : ' <mark>⚠️ 未与 JD 原文核对上</mark>') + '</span></div>' +
+      '<div class="map-row"><span class="map-k">你的素材</span><span>' +
+      (x.resume_evidence ? esc(x.resume_evidence)
+        : '<i style="color:var(--sub)">（没有 —— 这是真实缺口）</i>') + '</span></div>' +
+      '<div class="map-row sug"><span class="map-k">怎么改</span><span>' + esc(x.suggestion) + '</span></div>' +
+      (x.note ? '<div class="map-note">⚠️ 代码核对：' + esc(x.note) + '</div>' : "") +
+      '</div>';
+  });
+  if ((r.changes || []).length) {
+    h += '<h3 class="blk">这次做了哪些重排与重述（共 ' + r.changes.length + ' 条）</h3><ul class="reasons">' +
+      r.changes.map((c) => '<li>' + esc(c) + '</li>').join("") + '</ul>';
+  }
+  if (r.cover_letter) {
+    h += '<h3 class="blk">招呼语（可直接用，也可以自己改）</h3>' +
+      '<div class="quote-box ok" style="white-space:pre-wrap">' + esc(r.cover_letter) + '</div>';
+  }
+  h += '<div class="note">📄 这份清单也落盘在 <code>output/' + esc(r.jd_id) +
+    '/rewrite_guide.md</code>，可以直接打开照做。</div>';
+  return h;
+}
+
+/* ---------- 视图 5：审批面板 ---------- */
+function paneApproval(r) {
+  const isPending = r.approval_status === "pending";
+  const status = '<div class="kv"><b>稿件状态</b><span class="badge ' + (isPending ? "pending" : "apply") + '">' +
+                 APPROVAL_TEXT[r.approval_status] + '</span>' +
+                 (r.ticket_id ? '　<span class="panel-hint">ticket ' + esc(r.ticket_id) + '</span>' : "") + '</div>';
+  if (!isPending) {
+    return status + '<div class="note">本行当前不在待审批状态（' + APPROVAL_TEXT[r.approval_status] + '）。审批只对已生成改写稿的行开放。</div>';
+  }
+  return status +
+    '<h3 class="blk">HITL 三道关（缺一关就不算真挂起）</h3>' +
+    '<div class="gate"><span>✓ 待办存在</span><span>✓ 会话真挂起</span><span>✓ 单号一致</span></div>' +
+    '<div class="panel-hint">注：这三关必须由后端实时确认。<b>界面显示「待审批」不等于后端真的挂着</b>（服务可能重启过），所以批准动作要走接口，不能改本地数据。</div>' +
+    '<h3 class="blk">待审稿件</h3>' +
+    '<div class="quote-box ok">' + (r.draft_path ? esc(r.draft_path) : "（稿子内容在这里预览）") + '</div>' +
+    '<div style="display:flex; gap:8px; margin-top:12px">' +
+      '<button class="primary" id="btnApprove" data-armed="0">批准</button>' +
+      '<button class="danger" id="btnReject">拒绝</button>' +
+    '</div>' +
+    '<div class="note" id="approveNote">批准需要点两次（防手滑）：第一次变「确认批准？」，4 秒不点自动变回。</div>';
+}
+
+/* ---------- 视图 6：审计时间线 ---------- */
+function paneAudit(r) {
+  const rows = (r.audit || []).map((a) =>
+    '<div class="tl-item"><span>' + esc(a.ts) + '</span>' +
+    '<span class="flowto">' + esc(a.from) + ' → ' + esc(a.to) + '</span>' +
+    '<span>' + esc(a.note) + '</span></div>'
+  ).join("");
+  return '<div class="panel-hint">按接手顺序回放每次节点交接，用于回答「这个结论是怎么走出来的」。</div>' +
+    '<div class="timeline">' + (rows || '<div class="empty">暂无交接记录</div>') + '</div>' +
+    '<h3 class="blk">本次汇总</h3>' +
+    '<div class="kv"><b>成本</b><span>¥' + Number(r.cost || 0).toFixed(3) + '</span></div>' +
+    '<div class="kv"><b>耗时</b><span>' + r.elapsed + ' 秒</span></div>' +
+    '<div class="kv"><b>重写</b><span>' + r.rewrite_round + ' 轮</span></div>';
+}
+
+/* ---------- 详情渲染 + 四个 tab ---------- */
+function renderDetail() {
+  const r = DATA.records.find((x) => x.jd_id === state.selected);
+  const box = document.getElementById("detail");
+  if (!r) { box.innerHTML = '<div class="empty">左侧选一条 JD</div>'; return; }
+  const pending = r.approval_status === "pending" ? '<span class="n">1</span>' : "";
+  const tabs = [
+    { k: "judge", t: "判定详情", n: "" },
+    { k: "guide", t: "怎么改简历", n: (r.jd_mapping || []).length ? "（" + r.jd_mapping.length + " 条）" : "（不适用）" },
+    { k: "compare", t: "溯源对比", n: "" },
+    { k: "approval", t: "审批", n: pending },
+    { k: "audit", t: "审计时间线", n: "" }
+  ];
+  const pane = { judge: paneJudge, guide: paneGuide, compare: paneCompare, approval: paneApproval, audit: paneAudit }[state.tab];
+  box.innerHTML = '' +
+    '<div class="panel-head">' +
+      '<div><div class="panel-title">' + esc(r.company) + ' · ' + esc(r.title) + '</div>' +
+      '<div class="panel-hint">' + esc(r.jd_id) + ' · ' + esc(r.city) + ' · 抓取 ' + esc(r.fetched_at) +
+      (r.stale ? ' <b style="color:var(--amber)">（可能已过期）</b>' : "") + '</div></div>' +
+      '<span class="badge ' + VERDICT_CLASS[r.verdict] + '">' + VERDICT_TEXT[r.verdict] + ' · ' + esc(r.verdict_5) + '</span>' +
+    '</div>' +
+    '<div class="tabs">' + tabs.map((t) =>
+      '<button class="tab ' + (state.tab === t.k ? "on" : "") + '" data-tab="' + t.k + '">' + t.t + t.n + '</button>'
+    ).join("") + '</div>' +
+    '<div class="tabpane">' + pane(r) + '</div>';
+  bindApproval(r);
+  bindJump();
+}
+
+function renderAll() { renderStats(); renderFilters(); renderList(); renderDetail(); }
+
+/* ============================================================
+   2) 审批按钮：armed 二次确认（4 秒自动解除）
+   ============================================================ */
+let disarmTimer = null;
+function bindApproval(r) {
+  const ok = document.getElementById("btnApprove");
+  if (ok) {
+    ok.addEventListener("click", () => {
+      if (ok.dataset.armed !== "1") {
+        ok.dataset.armed = "1";
+        ok.textContent = "确认批准？";
+        disarmTimer = window.setTimeout(() => { ok.dataset.armed = "0"; ok.textContent = "批准"; }, 4000);
+        return;
+      }
+      window.clearTimeout(disarmTimer);
+      ok.textContent = "已批准";
+      ok.disabled = true;
+      document.getElementById("approveNote").textContent =
+        "（演示版只改界面。接后端后这里会调用 /approvals/" + (r.ticket_id || "") + "，成功后重新拉快照。拒绝必须填理由。）";
+    });
+  }
+  const no = document.getElementById("btnReject");
+  if (no) {
+    no.addEventListener("click", () => {
+      const why = window.prompt("拒绝理由（必填）：");
+      if (why === null) return;
+      if (!why.trim()) { window.alert("拒绝必须填理由 —— 凭什么拒绝和凭什么该投一样要留证据"); return; }
+      no.textContent = "已拒绝";
+      no.disabled = true;
+    });
+  }
+}
+
+/* 溯源对比：点原子 → 高亮左侧对应行 */
+function bindJump() {
+  document.querySelectorAll(".atom").forEach((el) => {
+    el.addEventListener("click", () => {
+      const n = el.dataset.jump;
+      if (!n) return;
+      const target = document.getElementById("base-" + n);
+      if (!target) return;
+      document.querySelectorAll(".line.flash").forEach((x) => x.classList.remove("flash"));
+      target.classList.add("flash");
+      target.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  });
+}
+
+/* ============================================================
+   3) 导出：CSV 必须带 BOM，否则 Excel 打开中文乱码
+   ============================================================ */
+function download(name, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function toCsv(rows) {
+  const head = ["jd_id", "company", "title", "city", "verdict", "verdict_5", "hard_rules", "cost", "approval_status"];
+  const body = rows.map((r) => [
+    r.jd_id, r.company, r.title, r.city,
+    VERDICT_TEXT[r.verdict], r.verdict_5,
+    (r.hard_flags || []).map((f) => f.rule_id).join("|"),
+    Number(r.cost || 0).toFixed(3), r.approval_status
+  ]);
+  return [head].concat(body)
+    .map((line) => line.map((c) => '"' + String(c).replaceAll('"', '""') + '"').join(","))
+    .join("\r\n");
+}
+
+/* ============================================================
+   4) 事件绑定 + 启动
+   ============================================================ */
+document.getElementById("filters").addEventListener("click", (e) => {
+  const key = e.target.dataset && e.target.dataset.filter;
+  if (!key) return;
+  state.filter = key;
+  renderAll();
+});
+
+document.getElementById("list").addEventListener("click", (e) => {
+  const row = e.target.closest(".row");
+  if (!row) return;
+  state.selected = row.dataset.id;
+  renderAll();
+});
+
+document.getElementById("detail").addEventListener("click", (e) => {
+  const btn = e.target.closest(".tab");
+  if (btn) { state.tab = btn.dataset.tab; renderDetail(); return; }
+});
+
+document.getElementById("q").addEventListener("input", (e) => {
+  state.q = e.target.value;
+  renderList();
+});
+
+document.getElementById("btnCsv").addEventListener("click", () => {
+  download("proj3判定结果-" + String(DATA.generated_at).slice(0, 10) + ".csv",
+           "\ufeff" + toCsv(pick()), "text/csv;charset=utf-8");
+});
+
+document.getElementById("btnJson").addEventListener("click", () => {
+  download("proj3判定结果-" + String(DATA.generated_at).slice(0, 10) + ".json",
+           JSON.stringify(DATA, null, 2), "application/json");
+});
+
+document.getElementById("btnReload").addEventListener("click", () => window.location.reload());
+
+renderAll();
+</script>
+</body>
+</html>

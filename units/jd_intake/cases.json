@@ -1,0 +1,59 @@
+{
+  "unit": "jd-intake",
+  "note": "纯代码，不调模型。重点验「不许清洗 text」和「缺字段要报错而不是糊过去」。",
+  "cases": [
+    {
+      "id": "ji-001",
+      "desc": "粘贴的 JD 文本：应归一化出 jd_id / stale / city",
+      "input": "岗位职责：负责 RAG 检索链路开发。任职要求：本科及以上学历，base 广州，1 年以上经验。",
+      "expect_ok": true,
+      "expect_city": "广州",
+      "expect_stale": false
+    },
+    {
+      "id": "ji-002",
+      "desc": "文本太短（<20 字）→ 直接报错，不产出一个「空判定」",
+      "input": "招 AI 工程师",
+      "expect_error_contains": "text 为空或少于"
+    },
+    {
+      "id": "ji-003",
+      "desc": "空字符串 → 报错（空输入不产生结论）",
+      "input": "",
+      "expect_error_contains": "text 为空或少于"
+    },
+    {
+      "id": "ji-004",
+      "desc": "超期 JD（fetched_at 早于 90 天）→ 只标 stale，不报错、不拦判定",
+      "input": {
+        "text": "岗位职责：负责 LLM 应用开发与检索优化。任职要求：本科及以上学历，熟悉 Python。",
+        "fetched_at": "2026-01-01"
+      },
+      "expect_ok": true,
+      "expect_stale": true
+    },
+    {
+      "id": "ji-005",
+      "desc": "fetched_at 格式非法 → 报错",
+      "input": {
+        "text": "岗位职责：负责 LLM 应用开发与检索优化。任职要求：本科及以上学历，熟悉 Python。",
+        "fetched_at": "2026/01/01"
+      },
+      "expect_error_contains": "YYYY-MM-DD"
+    },
+    {
+      "id": "ji-006",
+      "desc": "保留原文标点与换行，不做任何清洗（这直接决定引文能不能对上）",
+      "input": "岗位职责：\n1. 负责 RAG 链路；\n任职要求：\n1. base 北京，需全职坐班，不支持远程办公。",
+      "expect_ok": true,
+      "expect_text_unchanged": true
+    },
+    {
+      "id": "ji-007",
+      "desc": "没写城市 → city 空字符串，不许猜一个",
+      "input": "岗位职责：负责 LLM 应用开发。任职要求：本科及以上学历，熟悉 Python 与 FastAPI。",
+      "expect_ok": true,
+      "expect_city": ""
+    }
+  ]
+}
