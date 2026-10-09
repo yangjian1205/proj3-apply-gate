@@ -3,7 +3,7 @@
   "candidate_id": "your-github-id",
   "name": "张某某",
   "updated_at": "2026-10-06",
-  "_confirmed": false,
+  "_confirmed": true,
   "_todo": [
     "这是模板：复制为 candidate_profile.json 后填入你自己的真实信息，再把 _confirmed 改成 true。expected_cities 现在是示例值「广州」，必须改成你真实的期望工作城市 —— 它直接决定「base 某地 + 坐班」这类硬门槛判不判。"
   ],
