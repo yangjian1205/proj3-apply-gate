@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-011",
+  "company": "北岸信息（迪拜）",
+  "title": "AI 应用开发工程师",
+  "difficulty": "medium",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责中东市场 AI 客服与营销工具的开发；\n2. 设计对话链路与提示词模板；\n3. 参与产品本地化适配。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 与主流大模型 API；\n3. 岗位常驻迪拜，公司无法为候选人办理工作签证，需自行解决当地工作许可；\n4. 能用英语进行日常工作沟通。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "no_sponsorship",
+      "quote": "公司无法为候选人办理工作签证，需自行解决当地工作许可"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-011",
+  "fetched_at": "2026-10-06"
+}

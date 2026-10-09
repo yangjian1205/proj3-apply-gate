@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "candidate_id": "eval-fixture",
+  "name": "评测固定档案（脱敏）",
+  "updated_at": "2026-10-06",
+  "_confirmed": true,
+  "_todo": [],
+  "expected_cities": [
+    "广州"
+  ],
+  "accept_remote": true,
+  "accept_relocate": false,
+  "need_sponsorship": false,
+  "work_auth_local": true,
+  "highest_degree": "本科",
+  "degree_level": 2,
+  "is_fresh_graduate": false,
+  "graduation_year": 2025,
+  "years_experience": 1.0,
+  "years_experience_note": "评测口径固定值，与评测集 gold 标注一致；与使用者真实档案无关",
+  "certificates": [
+    "华为 HCIP-AI-EI（H13-321）备考中"
+  ],
+  "language_certs": [],
+  "target_roles": [
+    "AI Agent 开发工程师",
+    "LLM 应用开发工程师",
+    "AI 应用工程师"
+  ],
+  "current_status": "离职求职中",
+  "available_from": "随时",
+  "expected_salary": "面议",
+  "degree_level_map": {
+    "1": "大专及以下",
+    "2": "本科",
+    "3": "硕士",
+    "4": "博士"
+  },
+  "_note": "评测 / 门禁专用固定档案，**内容已脱敏**，不含任何个人信息。它的作用：让门禁与使用者的个人档案解耦 —— 使用者改自己的期望城市，不应该让门禁红一次（那是档案变了，不是代码退化了）。评测集的 gold 按「期望城市 = 广州」标注，所以这里固定为广州。"
+}

@@ -1,0 +1,130 @@
+{
+  "rules_version": "v1",
+  "updated_at": "2026-10-06",
+  "thresholds": {
+    "years_gap_reject": 3,
+    "years_gap_hint_min": 1,
+    "years_gap_hint_max": 2,
+    "jd_stale_days": 90,
+    "rewrite_max_round": 3
+  },
+  "rules": [
+    {
+      "rule_id": "no_sponsorship",
+      "tier": "absolute",
+      "check": "pattern_only",
+      "label": "JD 明写不提供工作签证支持",
+      "hint_only": false,
+      "pattern_count": 17,
+      "boundary": "只判断 JD 是否明写『不提供』。JD 完全未提签证时本规则不触发 —— 不推断、不猜测，缺信息交人工。"
+    },
+    {
+      "rule_id": "work_auth_local",
+      "tier": "absolute",
+      "check": "pattern_only",
+      "label": "JD 把本地户籍 / 本地工作许可写成准入条件",
+      "hint_only": false,
+      "pattern_count": 14,
+      "boundary": "只判断 JD 是否把户籍 / 工作许可写成准入条件。写『本地优先』不算。"
+    },
+    {
+      "rule_id": "onsite_only",
+      "tier": "absolute",
+      "check": "city_conflict",
+      "label": "JD 要求全职坐班且工作城市不在候选人期望城市内",
+      "hint_only": false,
+      "pattern_count": 10,
+      "boundary": "必须同时满足两条才触发：① JD 明写坐班 / 不接受远程 ② JD 明写的工作城市不在期望城市里。任一条缺失 → 不触发。城市没写清楚属于信息不足，交人工，不猜。"
+    },
+    {
+      "rule_id": "degree_master_plus",
+      "tier": "absolute",
+      "check": "degree_conflict",
+      "label": "JD 要求硕士及以上学历，候选人最高学历为本科",
+      "hint_only": false,
+      "pattern_count": 7,
+      "boundary": "只判断写在任职要求里的准入学历门槛。写『优先』『加分』不算硬门槛。"
+    },
+    {
+      "rule_id": "degree_phd",
+      "tier": "absolute",
+      "check": "degree_conflict",
+      "label": "JD 要求博士学历，候选人最高学历为本科",
+      "hint_only": false,
+      "pattern_count": 5,
+      "boundary": "只判断准入学历门槛。写『博士优先』不算。"
+    },
+    {
+      "rule_id": "required_certificate",
+      "tier": "absolute",
+      "check": "certificate_conflict",
+      "label": "JD 要求必须持有候选人没有的证书 / 执业资格",
+      "hint_only": false,
+      "pattern_count": 6,
+      "boundary": "只判断写『必须 / 须 / 要求持有』的证书。写『优先 / 加分』不算硬门槛 —— 这是本项目最容易误杀的一类，阈值取严。"
+    },
+    {
+      "rule_id": "fresh_grad_only",
+      "tier": "absolute",
+      "check": "fresh_grad_conflict",
+      "label": "JD 仅面向应届毕业生，而候选人已毕业",
+      "hint_only": false,
+      "pattern_count": 9,
+      "boundary": "只判断写『仅 / 只 / 限』的应届专属条件。写『应届优先』不算。"
+    },
+    {
+      "rule_id": "language_required",
+      "tier": "absolute",
+      "check": "language_conflict",
+      "label": "JD 要求候选人没有的语言等级证书",
+      "hint_only": false,
+      "pattern_count": 10,
+      "boundary": "只判断写死分数或等级的语言要求。写『英语良好』『可作为工作语言』不算 —— 那是能力描述，需要判断，归打分器管。"
+    },
+    {
+      "rule_id": "years_gap_reject",
+      "tier": "threshold",
+      "check": "years_gap",
+      "label": "JD 要求年限比候选人实际年限多 3 年及以上",
+      "hint_only": false,
+      "pattern_count": 6,
+      "boundary": "只比较 JD 明写的年限数字与档案里的实际年限。JD 没写年限 → 不触发。"
+    },
+    {
+      "rule_id": "years_gap_hint",
+      "tier": "threshold",
+      "check": "years_gap",
+      "label": "JD 要求年限比候选人实际年限多 1—2 年（只提示，不拒）",
+      "hint_only": true,
+      "pattern_count": 6,
+      "boundary": "本规则永不产生 reject。它的存在本身就是『防误杀』这一立场的代码体现。"
+    },
+    {
+      "rule_id": "senior_title",
+      "tier": "soft",
+      "check": "never_reject",
+      "label": "JD 出现『资深 / 专家 / 高级』等职级措辞",
+      "hint_only": false,
+      "pattern_count": 5,
+      "boundary": "本规则不参与硬判定。只把命中的词交给 match-score 作为扣分参考。"
+    },
+    {
+      "rule_id": "industry_bg",
+      "tier": "soft",
+      "check": "never_reject",
+      "label": "JD 要求特定行业背景",
+      "hint_only": false,
+      "pattern_count": 3,
+      "boundary": "本规则不参与硬判定。"
+    },
+    {
+      "rule_id": "skill_gap",
+      "tier": "soft",
+      "check": "never_reject",
+      "label": "JD 要求候选人简历中没有的技术栈",
+      "hint_only": false,
+      "pattern_count": 12,
+      "boundary": "本规则不参与硬判定。技能覆盖度不做硬门槛，只影响 match-score 的 skill 维度分。"
+    }
+  ]
+}

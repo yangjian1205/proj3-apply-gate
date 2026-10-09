@@ -1,0 +1,31 @@
+{
+  "jd_id": "jd-004",
+  "company": "恒通项目管理咨询",
+  "title": "AI 产品实施工程师",
+  "difficulty": "medium",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责企业级 AI 问答产品在客户现场的部署与实施；\n2. 对接客户业务需求，完成知识库配置与效果调优；\n3. 输出实施方案与验收文档。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 基础，能读懂接口文档；\n3. 须持有 PMP 项目管理证书，未持证者请勿投递；\n4. 能适应短期出差。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "required_certificate",
+      "quote": "须持有 PMP 项目管理证书，未持证者请勿投递"
+    }
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）",
+    "把『须持有 PMP 证书』当成可入职后补齐"
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-004",
+  "fetched_at": "2026-10-06"
+}

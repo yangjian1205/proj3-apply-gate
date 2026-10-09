@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-010",
+  "company": "正弘会计师事务所",
+  "title": "智能审计系统工程师",
+  "difficulty": "medium",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 参与智能审计系统的开发与维护；\n2. 配合审计业务团队完成数据处理流程自动化；\n3. 参与文档智能解析模块建设。\n任职要求：\n1. 本科及以上学历，财务或计算机相关专业；\n2. 熟悉 Python，了解基本的 NLP 处理流程；\n3. 必须持有注册会计师资格证书，或在入职前取得；\n4. 有审计行业经验者优先。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "required_certificate",
+      "quote": "必须持有注册会计师资格证书，或在入职前取得"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-010",
+  "fetched_at": "2026-10-06"
+}

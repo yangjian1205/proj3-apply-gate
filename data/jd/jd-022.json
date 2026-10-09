@@ -1,0 +1,40 @@
+{
+  "jd_id": "jd-022",
+  "company": "原点人工智能研究院",
+  "title": "大模型预训练工程师",
+  "difficulty": "hard",
+  "is_hard_threshold": false,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责基座模型的预训练与继续训练；\n2. 负责数据配比、清洗与质量筛选策略；\n3. 参与分布式训练框架优化。\n任职要求：\n1. 硕士及以上学历，有顶会论文者优先；\n2. 熟悉 PyTorch、Megatron 或 DeepSpeed；\n3. 有千卡以上集群训练经验；\n4. 熟悉 CUDA 算子开发者优先。",
+  "gold_reasons": [
+    {
+      "type": "soft",
+      "rule_id": "skill_gap",
+      "quote": "熟悉 PyTorch、Megatron 或 DeepSpeed"
+    },
+    {
+      "type": "soft",
+      "rule_id": "skill_gap",
+      "quote": "有千卡以上集群训练经验"
+    },
+    {
+      "type": "soft",
+      "rule_id": "skill_gap",
+      "quote": "熟悉 CUDA 算子开发者优先"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-022",
+  "fetched_at": "2026-10-06"
+}

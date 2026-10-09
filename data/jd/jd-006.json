@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-006",
+  "company": "启明智慧教育",
+  "title": "AI 应用开发培训生",
+  "difficulty": "easy",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 参与 AI 应用产品的功能开发与调试；\n2. 在导师带领下完成模块级任务；\n3. 参与产品测试与文档编写。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 基础语法，对 AI 应用有热情；\n3. 本岗位仅面向 2027 届应届毕业生，需提供在校证明；\n4. 每周可到岗 4 天以上。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "fresh_grad_only",
+      "quote": "本岗位仅面向 2027 届应届毕业生，需提供在校证明"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-006",
+  "fetched_at": "2026-10-06"
+}

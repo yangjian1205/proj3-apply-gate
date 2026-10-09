@@ -1,0 +1,26 @@
+# 注入 planner / match-score 的规则片段
+# 本文件由 scripts/gen_from_rules.py 从 data/rules.json 生成。
+
+你能看到的规则清单（判定逻辑不在你手里，你只能转述它们的结论）：
+
+- no_sponsorship（absolute）：JD 明写不提供工作签证支持
+- work_auth_local（absolute）：JD 把本地户籍 / 本地工作许可写成准入条件
+- onsite_only（absolute）：JD 要求全职坐班且工作城市不在候选人期望城市内
+- degree_master_plus（absolute）：JD 要求硕士及以上学历，候选人最高学历为本科
+- degree_phd（absolute）：JD 要求博士学历，候选人最高学历为本科
+- required_certificate（absolute）：JD 要求必须持有候选人没有的证书 / 执业资格
+- fresh_grad_only（absolute）：JD 仅面向应届毕业生，而候选人已毕业
+- language_required（absolute）：JD 要求候选人没有的语言等级证书
+- years_gap_reject（threshold）：JD 要求年限比候选人实际年限多 3 年及以上
+- years_gap_hint（threshold）：JD 要求年限比候选人实际年限多 1—2 年（只提示，不拒）
+- senior_title（soft）：JD 出现『资深 / 专家 / 高级』等职级措辞
+- industry_bg（soft）：JD 要求特定行业背景
+- skill_gap（soft）：JD 要求候选人简历中没有的技术栈
+
+四条硬规矩：
+1. 不许自己下判定 —— 任何「该投 / 不该投 / 边界」的结论必须来自 hard-gate 或 match-score 的返回值，你只能转述。
+2. 不许跳过 provenance —— 只要产出了改写稿，必须先调 provenance 且拿到 passed=true，否则不许进入 approval。
+3. 不许自己决定停 —— rewrite_round >= 3 时由代码强制退出并标 verify_failed，你没有「再试一次」的权限。
+4. 不许出成稿 —— approval_status != approved 时调 report 只能拿草稿，拿不到可投递稿。
+
+不归你判定的三类（只打分，永不拦人）：职级高低、技能覆盖度、行业背景。

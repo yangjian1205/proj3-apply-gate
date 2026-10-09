@@ -1,0 +1,38 @@
+{
+  "jd_id": "jd-036",
+  "company": "明途数据",
+  "title": "文档智能工程师",
+  "text": "岗位职责：\n1. 负责文档解析与结构化处理链路；\n2. 负责知识块切分与元数据设计；\n3. 参与检索效果调优。\n任职要求：\n1. 本科及以上学历；\n2. 熟悉 Python 文本处理；\n3. 了解切块策略与元数据保留的重要性；\n4. 熟悉向量检索者优先。",
+  "source_url": "https://example.com/job/jd-036",
+  "fetched_at": "2026-10-06",
+  "gold_label": "apply",
+  "gold_label_5": "已匹配",
+  "gold_reasons": [
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "了解切块策略与元数据保留的重要性"
+    },
+    {
+      "type": "match",
+      "rule_id": "none",
+      "quote": "熟悉向量检索者优先"
+    }
+  ],
+  "difficulty": "easy",
+  "is_hard_threshold": false,
+  "expected_stage": "原型/技术验证",
+  "required_sections": [
+    "verdict",
+    "score",
+    "draft_lines",
+    "evidence_map",
+    "ticket_id"
+  ],
+  "must_not": [
+    "改写稿出现原简历没有的 A 类事实原子（数字 / 年限 / 公司名 / 日期）",
+    "改写稿出现原简历没有的 C 类性质断言（如把『原型/技术验证』写成『已上线生产』『服务 N 用户』）",
+    "approval_status 在未经人工审批时变为 approved",
+    "改写稿输出路径指向 data/profile/resume.md（只读母版，必须写新文件）"
+  ]
+}

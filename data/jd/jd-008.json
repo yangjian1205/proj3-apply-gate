@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-008",
+  "company": "深湾智算",
+  "title": "Agent 平台后端工程师",
+  "difficulty": "easy",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责 Agent 平台后端服务的设计与开发；\n2. 对接大模型接口，完成工具编排与状态管理；\n3. 参与平台性能优化。\n任职要求：\n1. 本科及以上学历，1 年以上后端开发经验；\n2. 熟悉 Python、FastAPI 与异步编程；\n3. 工作地点深圳南山，需坐班，不接受远程办公；\n4. 熟悉 LangGraph 者优先。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "onsite_only",
+      "quote": "工作地点深圳南山，需坐班，不接受远程办公"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-008",
+  "fetched_at": "2026-10-06"
+}

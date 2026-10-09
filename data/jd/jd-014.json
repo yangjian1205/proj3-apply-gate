@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-014",
+  "company": "寰宇人才集团",
+  "title": "AI 产品经理（智能体方向）",
+  "difficulty": "medium",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责智能体产品的需求分析与产品设计；\n2. 协调研发与业务团队推进落地；\n3. 跟踪行业动态并输出竞品分析。\n任职要求：\n1. 本科及以上学历，3 年以上产品经验；\n2. 对 LLM 应用有较深理解；\n3. 须持有当地永久居留权或已获得本地工作许可方可投递；\n4. 沟通协调能力优秀。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "work_auth_local",
+      "quote": "须持有当地永久居留权或已获得本地工作许可方可投递"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-014",
+  "fetched_at": "2026-10-06"
+}

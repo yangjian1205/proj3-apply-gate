@@ -1,0 +1,30 @@
+{
+  "jd_id": "jd-015",
+  "company": "智学未来",
+  "title": "AI 应用开发实习生转正岗",
+  "difficulty": "easy",
+  "is_hard_threshold": true,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 参与 AI 学习助手的功能开发；\n2. 完成分配的模块编码与自测；\n3. 参与需求评审与迭代。\n任职要求：\n1. 本科及以上在读或应届；\n2. 熟悉 Python 基础，了解 FastAPI 更佳；\n3. 仅限应届毕业生投递，需提供在校证明与成绩单；\n4. 每周到岗不少于 4 天。",
+  "gold_reasons": [
+    {
+      "type": "hard",
+      "rule_id": "fresh_grad_only",
+      "quote": "仅限应届毕业生投递，需提供在校证明与成绩单"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-015",
+  "fetched_at": "2026-10-06"
+}

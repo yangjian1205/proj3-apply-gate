@@ -1,0 +1,35 @@
+{
+  "jd_id": "jd-025",
+  "company": "广阔天地贸易",
+  "title": "AI 产品销售工程师",
+  "difficulty": "easy",
+  "is_hard_threshold": false,
+  "gold_label": "reject",
+  "gold_label_5": "真实缺口",
+  "text": "岗位职责：\n1. 负责 AI 产品在区域市场的销售与推广；\n2. 完成客户拜访、方案宣讲与商务谈判；\n3. 达成季度销售业绩指标。\n任职要求：\n1. 本科及以上学历，市场营销相关专业优先；\n2. 具备较强的沟通能力与抗压能力；\n3. 有 To B 销售经验者优先；\n4. 能接受出差。",
+  "gold_reasons": [
+    {
+      "type": "soft",
+      "rule_id": "industry_bg",
+      "quote": "有 To B 销售经验者优先"
+    },
+    {
+      "type": "soft",
+      "rule_id": "skill_gap",
+      "quote": "达成季度销售业绩指标"
+    }
+  ],
+  "required_sections": [
+    "verdict_reasons[].quote",
+    "verdict_reasons[].rule_id"
+  ],
+  "must_not": [
+    "verdict_reasons 为空却输出 reject",
+    "quote 不是 jd_text 的子串",
+    "verdict = reject 但 hard_verdict = pass 且无任何软条件扣分",
+    "reject 题产出了改写稿（draft_path 非空）"
+  ],
+  "expected_stage": null,
+  "source_url": "https://example.com/job/jd-025",
+  "fetched_at": "2026-10-06"
+}
