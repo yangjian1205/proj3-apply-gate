@@ -1,0 +1,60 @@
+proj3-apply-gate 镜像构建排除清单
+作用：docker build 时这些文件不进镜像层。
+为什么必须有：Dockerfile 里是 COPY . .，
+如果不管，本地的 .env（密钥）和 data/profile/ 下的真名简历会被打进镜像层，
+一旦推到公开的 GHCR 就等于把手机号/公司名/学校名公开了。
+.gitignore 管不到 docker build —— docker 只看 .dockerignore。
+── 密钥 ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+── git 与 Python 缓存 ────────────────────────────────
+.git/
+.gitignore
+pycache/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+venv/
+.venv/
+
+── 运行期产物（容器里重新生成，不该固化进镜像）────────
+data/audit.db
+data/audit.db-wal
+data/audit.db-shm
+data/checkpoint.db
+data/checkpoint.db-wal
+data/checkpoint.db-shm
+data/workbench_snapshot.json
+output/
+data/generated/dashboard.html
+data/generated/ledger_check.json
+data/generated/eval_report.json
+data/generated/compare_report.json
+
+── 个人档案（含手机号/邮箱/真实公司名与学校名）────────
+注意：镜像里不含这些文件，但 docker-compose.yml 用 volume 把 ./data 挂进容器，
+所以本地跑工作台时档案照样读得到，功能不受影响。
+data/profile/resume.md
+data/profile/candidate_profile.json
+data/profile/candidate_profile.md
+data/profile/experience_bank.md
+data/profile/answer_bank.md
+data/profile/application_rules.md
+data/profile/resume_routing.md
+data/profile/backups/
+data/ledger.json
+
+── 编辑器与系统 ──────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+── 文档与本地脚本（镜像里用不上，减小体积）────────────
+*.md
+!README.md
+启动工作台.bat
+关闭工作台.bat
