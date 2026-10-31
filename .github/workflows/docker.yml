@@ -1,0 +1,49 @@
+name: docker-gate
+
+# 目的：在 GitHub 的机器上真实构建并运行 Docker 镜像。
+# 本机（Win10 19044）Docker 跑不起来，这份工作流就是"容器能跑"的第三方证据：
+# 每次 push 都重新 build 一遍镜像，再在容器里跑 L1 门禁，绿勾即代表 exit 0。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # 支持网页上手动点一下就跑
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read      # 读代码
+      packages: write     # 推镜像到 GHCR 需要这个
+
+    steps:
+      - name: 1. 拉代码
+        uses: actions/checkout@v4
+
+      - name: 2. 构建镜像
+        run: docker build -t proj3-apply-gate:${{ github.sha }} .
+
+      - name: 3. 在容器里跑 L1 门禁（不联网、不花钱）
+        # set -o pipefail 是关键：没有它，管道里 docker 失败也会被 tee 的"成功"盖掉，
+        # 门禁没过 CI 还是绿的 —— 那就是假绿，正好违反本项目"可验证"的原则。
+        run: |
+          set -o pipefail
+          docker run --rm proj3-apply-gate:${{ github.sha }} \
+            python scripts/gate.py --json | tee gate_report.json
+
+      - name: 4. 把门禁报告存成可下载附件
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-report
+          path: gate_report.json
+
+      - name: 5. 登录 GHCR（GitHub 自带镜像仓库）
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: 6. 打标签并推送镜像
+        run: |
+          IMG="ghcr.io/${{ github.repository_owner }}/proj3-apply-gate"
+          docker tag proj3-apply-gate:${{ github.sha }} "$IMG:latest"
+          docker tag proj3-apply-gate:${{ github.sha }} "$IMG:${{ github.sha }}"
+          docker push "$IMG:latest"
+          docker push "$IMG:${{ github.sha }}"
